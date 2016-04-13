@@ -1,0 +1,52 @@
+-*- mode: org; -*-
+
+* [0/5] Overall
+ * [ ] Raytracer
+   - [ ] BVH structure
+   - [ ] Main algorithm
+     + [ ] Ray march
+     + [ ] Frustum culling
+     + [ ] Coherence checks
+   - [ ] Intersection checks
+     + [ ] Sphere
+     + [ ] Box
+     + [ ] Triangle
+
+   - [ ] Material support
+     + [ ] Blinn-Phong
+     + [ ] BRDF (lol, impossible)
+
+   - [ ] SIMD enhancement
+   - [ ] OpenGL enhancement
+
+ * [ ] Utilities
+   - [ ] Make screenshots
+   - [ ] Load Wavefront .obj
+   - [ ] GUI aka text overlays for main window and so on
+
+ * [ ] Voxels
+   - [ ] Investigation
+     - [ ] Read all the books
+       + [ ] GPU Gems
+       + [ ] That one in pdf on the phone
+   - [ ] Landscape-like things generation
+   - [ ] Voxel model editor
+   - [ ] Marching cubes
+   - [ ] Relative animation
+
+ * [ ] Physics
+   - [ ] Collision detection
+   - [ ] Destructions, i.e. voxel modification
+
+ * [ ] Lisp/Rust interface (CFFI <=> extern C)
+
+
+<2016-04-12 Tue> Work started.
+
+* Plan:
+  1 SDL window, CPU raytracing of sphere and plane
+  1.1 cmdline argument parser
+  2 Box rendering
+  3 Voxel rendering
+  4 Voxel generation
+  5 Deside on Lisp. Pico? Full Common? ECL?
