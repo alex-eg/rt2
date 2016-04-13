@@ -1,0 +1,8 @@
+[package]
+name = "rt"
+version = "0.1.0"
+authors = ["taptap <alexey.e.egorov@gmail.com>"]
+
+[dependencies]
+sdl2 = "0.17"
+gl = "0.6.0"
