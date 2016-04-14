@@ -41,12 +41,32 @@
  * [ ] Lisp/Rust interface (CFFI <=> extern C)
 
 
+*** General Info ***
+
+** Algebra **
+
+Sphere-ray intersection https://en.wikipedia.org/wiki/Line-sphere_intersection
+
+** Optics **
+
+Blinn-Phong equations:
+
+
+
+***** Log *****
+---------------
+
 <2016-04-12 Tue> Work started.
 
 * Plan:
   1 SDL window, CPU raytracing of sphere and plane
-  1.1 cmdline argument parser
+    - simple blinn-phong shading
+  1.1 cmdline argument parser - wut?
   2 Box rendering
   3 Voxel rendering
   4 Voxel generation
   5 Deside on Lisp. Pico? Full Common? ECL?
+
+<2016-04-13 Wed>
+
+- [ ] SIMD packeted rays
