@@ -43,10 +43,18 @@
 
 <2016-04-12 Tue> Work started.
 
-* Plan:
+* General Plan:
   1 SDL window, CPU raytracing of sphere and plane
   1.1 cmdline argument parser
   2 Box rendering
   3 Voxel rendering
   4 Voxel generation
   5 Deside on Lisp. Pico? Full Common? ECL?
+
+<2016-04-13 Wed>
+
+Are sunbmodules evil? And where to store dev documentation?
+ - submodule
+ - gh wiki
+ - right in the repo
+ - ????
