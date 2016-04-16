@@ -6,11 +6,14 @@ use sdl2::pixels::PixelFormatEnum;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::render::TextureAccess;
+use na::Vec3;
 
 const HEIGHT: u32 = 800;
 const WIDTH: u32 = 600;
 
 mod raytracer;
+
+use raytracer::{Camera, Sphere, march};
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -28,6 +31,16 @@ fn main() {
     let mut pixels: [u8; WIDTH as usize * HEIGHT as usize * 3] =
         [0; WIDTH as usize * HEIGHT as usize * 3];
 
+    let eye = Vec3 { x: 0., y: 0., z: 0.,};
+    let camera = Camera { eye: eye,
+                          fov: 50.0,
+                          width: WIDTH,
+                          height: HEIGHT };
+
+    let origin = Vec3 { x: 10., y: 0., z: 0. };
+    let spheres = vec![Sphere { origin: origin,
+                                radius: 5. }];
+
     renderer.clear();
     renderer.present();
 
@@ -43,8 +56,13 @@ fn main() {
                 _ => ()
             }
         }
-        for i in 0..pixels.len() {
-            pixels[i] = rand::random::<u8>();
+        let updated = march(&camera, &spheres);
+        let mut i = 0;
+        for v in updated {
+            pixels[i] = v.x;
+            pixels[i + 1] = v.y;
+            pixels[i + 2] = v.z;
+            i += 3;
         }
         texture.update(None, &pixels, WIDTH as usize);
         renderer.clear();

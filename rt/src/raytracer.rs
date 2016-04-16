@@ -10,21 +10,19 @@ struct Ray {
     origin: Vec3<f64>
 }
 
-struct Sphere {
-    radius: f64,
-    origin: Vec3<f64>
+pub struct Sphere {
+    pub radius: f64,
+    pub origin: Vec3<f64>
 }
 
-struct Camera {
-    up: Vec3<f64>,
-    eye: Vec3<f64>,
-    look_at: Vec3<f64>,
-    fov: f64,
-    width: u32,
-    height: u32
+pub struct Camera {
+    pub eye: Vec3<f64>,
+    pub fov: f64,
+    pub width: u32,
+    pub height: u32
 }
 
-fn march (cam: Camera, spheres: &Vec<Box<Sphere>>) -> Vec<Vec3<u8>> {
+pub fn march (cam: &Camera, spheres: &Vec<Sphere>) -> Vec<Vec3<u8>> {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
     let angle = (PI * 0.5 * cam.fov / 180.).tan();
     let invWidth = 1. / cam.width as f64;
@@ -38,15 +36,14 @@ fn march (cam: Camera, spheres: &Vec<Box<Sphere>>) -> Vec<Vec3<u8>> {
             let mut ray: Vec3<f64> = Vec3 { x: xx, y: yy, z: -1. };
             ray.normalize_mut();
             let (r, g, b) = trace(&cam.eye, &ray, spheres);
-            pixels[(x * cam.width + y) as usize].x = r;
-            pixels[(x * cam.width + y) as usize].y = g;
-            pixels[(x * cam.width + y) as usize].z = b;
+            let v = Vec3 { x: r, y: g, z: b };
+            pixels.push(v);
         }
     }
     pixels
 }
 
-fn trace(oriign: &Vec3<f64>, dir: &Vec3<f64>, spheres: &Vec<Box<Sphere>>)
+fn trace(oriign: &Vec3<f64>, dir: &Vec3<f64>, spheres: &Vec<Sphere>)
          -> (u8, u8, u8) {
     let mut near: f64 = INFINITY;
     let mut t0: f64;
@@ -54,5 +51,5 @@ fn trace(oriign: &Vec3<f64>, dir: &Vec3<f64>, spheres: &Vec<Box<Sphere>>)
     for sphere in spheres {
 
     }
-    (6, 6, 6)
+    (126, 126, 126)
 }
