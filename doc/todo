@@ -1,14 +1,14 @@
 -*- mode: org; -*-
 
 * [0/5] Overall
- * [ ] Raytracer
+ * [-] Raytracer
    - [ ] BVH structure
    - [ ] Main algorithm
      + [ ] Ray march
      + [ ] Frustum culling
      + [ ] Coherence checks
-   - [ ] Intersection checks
-     + [ ] Sphere
+   - [-] Intersection checks
+     + [X] Sphere
      + [ ] Box
      + [ ] Triangle
 
@@ -49,7 +49,7 @@ Sphere-ray intersection https://en.wikipedia.org/wiki/Line-sphere_intersection
 
 ** Optics **
 
-Blinn-Phong equations:
+Blinn-Phong equations https://en.wikipedia.org/wiki/Blinn-Phong_shading_model
 
 
 
@@ -67,6 +67,6 @@ Blinn-Phong equations:
   4 Voxel generation
   5 Deside on Lisp. Pico? Full Common? ECL?
 
-<2016-04-13 Wed>
+<2016-04-15 Fri>
 
-- [ ] SIMD packeted rays
+It seems that Rust requires much more thinking before starting the implementation.
