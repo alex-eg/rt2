@@ -7,3 +7,4 @@ authors = ["taptap <alexey.e.egorov@gmail.com>"]
 sdl2 = "0.17"
 gl = "0.6.0"
 nalgebra = "0.6.0"
+rand = "0.3.14"
