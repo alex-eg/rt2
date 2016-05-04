@@ -23,12 +23,8 @@ impl Sphere {
         let r2 = self.radius * self.radius;
         if d2 > r2 { return false; }
         let thc: f64 = (r2 - d2).sqrt();
-//        println!("t0: {}, t1: {}", t0, t1);
         *t0 = tca - thc;
         *t1 = tca + thc;
-//        println!("t0 new: {}, t1 new: {}", tca - thc, tca + thc);
-//        println!("t0: {}, t1: {}", t0, t1);
-//        thread::sleep(Duration::from_millis(3000));
         true
     }
 }
@@ -58,13 +54,9 @@ pub fn march (cam: &Camera, spheres: &Vec<&Sphere>) -> Vec<Vec3<f64>> {
                 dir: (Vec3 { x: xx, y: yy, z: -1. }).normalize()
             };
             let color = trace(&ray, spheres);
-//            println!("pixel: {} color: {}", y * cam.width + x, color);
             pixels.push(color);
         }
-//        println!("Row!");
     }
-//    println!("width {}, height {}, mul {}", cam.width, cam.height, cam.width * cam.height);
-//    process::exit(0);
     pixels
 }
 
@@ -77,7 +69,6 @@ fn trace(ray: &Ray, spheres: &Vec<&Sphere>)
         let mut t1 = INFINITY;
         let _ = spheres[i].intersect(ray, &mut t0, &mut t1);
         if t0 < 0. { t0 = t1 };
-//        println!("t0: {}, tnear: {}", t0, tnear);
         if t0 < tnear {
             tnear = t0;
             sphere = Some(spheres[i]);

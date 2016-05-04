@@ -55,12 +55,12 @@ fn main() {
     let sphere8 = Sphere { center: Vec3 { x: 1., y: 1., z: -20. },
                            radius: 5. };
     let spheres = vec![
-        //  &sphere1,
-        //  &sphere2,
-        //  &sphere3,
-        //  &sphere4,
-        //  &sphere5,
-        //  &sphere6,
+        &sphere1,
+        &sphere2,
+        &sphere3,
+        &sphere4,
+        &sphere5,
+        &sphere6,
         &sphere7,
         &sphere8,
     ];
