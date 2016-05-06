@@ -32,7 +32,7 @@ impl Sphere {
 
 pub fn march (cam: &Camera, spheres: &Vec<&Sphere>) -> Vec<Vec3<f64>> {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
-    let angle = (PI * 0.5 * cam.fov / 180.).tan();
+    let angle = cam.fov.to_radians().tan();
     let inv_width = 1. / cam.width as f64;
     let inv_height = 1. / cam.height as f64;
     let mut pixels: Vec<Vec3<f64>> =
@@ -45,7 +45,7 @@ pub fn march (cam: &Camera, spheres: &Vec<&Sphere>) -> Vec<Vec3<f64>> {
             let yy: f64 = (1. - 2. * ((y as f64 + 0.5) * inv_height)) * angle;
             let ray = Ray {
                 origin: cam.eye,
-                dir: (Vec3 { x: xx, y: yy, z: -1. }).normalize()
+                dir: ((Vec3 { x: xx, y: yy, z: -1. }).normalize() + cam.dir()).normalize()
             };
             let color = trace(&ray, spheres);
             pixels.push(color);

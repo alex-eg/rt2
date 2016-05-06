@@ -9,7 +9,10 @@ use sdl2::keyboard::Keycode;
 use sdl2::render::TextureAccess;
 use std::{thread};
 use std::time::Duration;
+
 use na::Vec3;
+
+use num_traits::identities::Zero;
 
 const WIDTH: u32 = 640;
 const HEIGHT: u32 = 480;
@@ -36,17 +39,14 @@ fn main() {
     let mut pixels: [u8; WIDTH as usize * HEIGHT as usize * 4] =
         [0; WIDTH as usize * HEIGHT as usize * 4];
 
-    let camera = CamBuilder::new("main")
-        .eye(Vec3 { x: 0., y: 0., z: 0.})
+    let mut camera = CamBuilder::new()
+        .eye(Vec3::zero())
+        .center(-Vec3::z())
         .fov(30.)
         .width(WIDTH)
         .height(HEIGHT)
-        .up(Vec3 { x: 0., y: -1., z: 0.})
+        .up(Vec3 { x: -1., y: 0., z: 0.})
         .build();
-//    let camera = Camera { eye: Vec3 { x: 0., y: 0., z: 0.,},
-//                          fov: 30.0,
-//                          width: WIDTH,
-//                          height: HEIGHT };
 
     let sphere1 = Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
                            radius: 5. };
@@ -87,6 +87,31 @@ fn main() {
                 | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'running
                 },
+
+                Event::KeyDown { keycode: Some(Keycode::Q), .. } => {
+                    camera.yaw(1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::E), .. } => {
+                    camera.yaw(-1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Up), .. } => {
+                    camera.pitch(1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Down), .. } => {
+                    camera.pitch(-1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Right), .. } => {
+                    camera.roll(1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Left), .. } => {
+                    camera.roll(-1.)
+                },
+
                 _ => ()
             }
         }
@@ -102,6 +127,6 @@ fn main() {
         renderer.clear();
         renderer.copy(&texture, None, None);
         renderer.present();
-        thread::sleep(Duration::from_millis(100));
+        thread::sleep(Duration::from_millis(10));
     }
 }

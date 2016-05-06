@@ -1,11 +1,10 @@
-use na::Vec3;
-use na::{Norm, Dot};
+use na::{Vec3, Rot3};
+use na::{Norm, Dot, Cross};
 
 use num_traits::identities::Zero;
 
 #[derive(Debug)]
 pub struct Camera {
-    pub name: String,
     /// Camera eye position
     pub eye: Vec3<f64>,
     /// View direction, i.e., center-eye vector
@@ -19,13 +18,12 @@ pub struct Camera {
 }
 
 pub struct CamBuilder {
-    name: String,
     /// Camera eye position
     eye: Vec3<f64>,
     /// Point to which camera looks at
     center: Vec3<f64>,
     up: Vec3<f64>,
-    /// View direction, i.e., center-eye vector
+    /// View direction, i.e., center - eye vector
     dir: Vec3<f64>,
     fov: f64,
     width: u32,
@@ -33,9 +31,8 @@ pub struct CamBuilder {
 }
 
 impl CamBuilder {
-    pub fn new(name: &str) -> CamBuilder {
+    pub fn new() -> CamBuilder {
         CamBuilder {
-            name: name.to_string(),
             eye: Vec3::zero(),
             center: Vec3::zero(),
             up: Vec3::zero(),
@@ -51,8 +48,8 @@ impl CamBuilder {
         self
     }
 
-    pub fn dir(&mut self, dir: Vec3<f64>) -> &mut CamBuilder {
-        self.dir = dir;
+    pub fn center(&mut self, center: Vec3<f64>) -> &mut CamBuilder {
+        self.center = center;
         self
     }
 
@@ -77,12 +74,12 @@ impl CamBuilder {
     }
 
     pub fn build(&self) -> Camera {
-        let center =(self.eye + self.dir).normalize();
+        let dir = (self.center - self.eye).normalize();
+        println!("Dir is {}", dir);
         Camera {
-            name: self.name.clone(),
             eye: self.eye,
-            dir: self.dir,
-            center: center,
+            dir: dir,
+            center: self.center,
             up: self.up,
             fov: self.fov,
             width: self.width,
@@ -93,6 +90,25 @@ impl CamBuilder {
 
 impl Camera {
     pub fn dir(&self) -> Vec3<f64> {
-        self.center - self.eye
+        (self.center - self.eye).normalize()
+    }
+
+    pub fn roll(&mut self, angle: f64) {
+        let rot = Rot3::new(self.dir() * angle.to_radians());
+        self.up = (self.up * rot).normalize();
+    }
+
+    pub fn yaw(&mut self, angle: f64) {
+        let rot = Rot3::new(self.up * angle.to_radians());
+        self.center = self.eye + self.dir() * rot;
+    }
+
+    pub fn pitch(&mut self, angle: f64) {
+        let dir = self.dir();
+        let side = self.up.cross(&dir);
+        let rot = Rot3::new(side * angle.to_radians());
+        let new_view = dir * rot;
+        self.center = self.eye + new_view;
+        self.up = new_view.cross(&side).normalize();
     }
 }
