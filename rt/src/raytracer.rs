@@ -2,6 +2,7 @@ use na::Vec3;
 use std::f64::consts::PI;
 use std::f64::INFINITY;
 use na::{Norm, Dot};
+use camera::Camera;
 
 struct Ray {
     dir: Vec3<f64>,
@@ -27,13 +28,6 @@ impl Sphere {
         *t1 = tca + thc;
         true
     }
-}
-
-pub struct Camera {
-    pub eye: Vec3<f64>,
-    pub fov: f64,
-    pub width: u32,
-    pub height: u32
 }
 
 pub fn march (cam: &Camera, spheres: &Vec<&Sphere>) -> Vec<Vec3<f64>> {

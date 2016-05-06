@@ -1,6 +1,7 @@
 extern crate sdl2;
 extern crate nalgebra as na;
 extern crate rand;
+extern crate num_traits;
 
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::event::Event;
@@ -14,8 +15,10 @@ const WIDTH: u32 = 640;
 const HEIGHT: u32 = 480;
 
 mod raytracer;
+mod camera;
 
-use raytracer::{Camera, Sphere, march};
+use raytracer::{Sphere, march};
+use camera::{Camera, CamBuilder};
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -33,10 +36,17 @@ fn main() {
     let mut pixels: [u8; WIDTH as usize * HEIGHT as usize * 4] =
         [0; WIDTH as usize * HEIGHT as usize * 4];
 
-    let camera = Camera { eye: Vec3 { x: 0., y: 0., z: 0.,},
-                          fov: 30.0,
-                          width: WIDTH,
-                          height: HEIGHT };
+    let camera = CamBuilder::new("main")
+        .eye(Vec3 { x: 0., y: 0., z: 0.})
+        .fov(30.)
+        .width(WIDTH)
+        .height(HEIGHT)
+        .up(Vec3 { x: 0., y: -1., z: 0.})
+        .build();
+//    let camera = Camera { eye: Vec3 { x: 0., y: 0., z: 0.,},
+//                          fov: 30.0,
+//                          width: WIDTH,
+//                          height: HEIGHT };
 
     let sphere1 = Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
                            radius: 5. };
