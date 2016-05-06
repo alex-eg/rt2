@@ -1,6 +1,4 @@
 use na::Vec3;
-use std::f64::consts::PI;
-use std::f64::INFINITY;
 use na::{Norm, Dot};
 
 use num_traits::identities::Zero;
