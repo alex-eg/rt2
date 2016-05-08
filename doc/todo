@@ -1,6 +1,6 @@
 -*- mode: org; -*-
 
-* [0/5] Overall
+* [0/6] Overall
  * [-] Raytracer
    - [ ] BVH structure
    - [ ] Main algorithm
@@ -18,6 +18,11 @@
 
    - [ ] SIMD enhancement
    - [ ] OpenGL enhancement
+
+ * [ ] Graphics
+   - [ ] Scene graph
+   - [ ] Movable camera
+   - [ ] Transformation stack
 
  * [ ] Utilities
    - [ ] Make screenshots
@@ -79,3 +84,7 @@ Are submodules evil? And where to store dev documentation?
  - ????
 
 - [ ] SIMD packeted rays
+
+<2016-04-20 Wed>
+
+Okay, the next step is movable camera.
