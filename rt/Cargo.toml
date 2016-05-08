@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["taptap <alexey.e.egorov@gmail.com>"]
 
 [dependencies]
-num-traits = "0.1"
+num = "0.1"
 sdl2 = "0.17"
 gl = "0.6.0"
 nalgebra = "0.6.0"

@@ -1,7 +1,7 @@
 use na::{Vec3, Rot3};
 use na::{Norm, Dot, Cross};
 
-use num_traits::identities::Zero;
+use num::traits::Zero;
 
 #[derive(Debug)]
 pub struct Camera {

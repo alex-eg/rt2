@@ -1,7 +1,7 @@
 extern crate sdl2;
 extern crate nalgebra as na;
 extern crate rand;
-extern crate num_traits;
+extern crate num;
 
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::event::Event;
@@ -12,7 +12,7 @@ use std::time::Duration;
 
 use na::Vec3;
 
-use num_traits::identities::Zero;
+use num::traits::Zero;
 
 const WIDTH: u32 = 640;
 const HEIGHT: u32 = 480;
