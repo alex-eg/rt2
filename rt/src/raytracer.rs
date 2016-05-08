@@ -2,6 +2,7 @@ use na::Vec3;
 use std::f64::consts::PI;
 use std::f64::INFINITY;
 use na::{Norm, Dot};
+use camera::Camera;
 
 struct Ray {
     dir: Vec3<f64>,
@@ -23,26 +24,15 @@ impl Sphere {
         let r2 = self.radius * self.radius;
         if d2 > r2 { return false; }
         let thc: f64 = (r2 - d2).sqrt();
-//        println!("t0: {}, t1: {}", t0, t1);
         *t0 = tca - thc;
         *t1 = tca + thc;
-//        println!("t0 new: {}, t1 new: {}", tca - thc, tca + thc);
-//        println!("t0: {}, t1: {}", t0, t1);
-//        thread::sleep(Duration::from_millis(3000));
         true
     }
 }
 
-pub struct Camera {
-    pub eye: Vec3<f64>,
-    pub fov: f64,
-    pub width: u32,
-    pub height: u32
-}
-
 pub fn march (cam: &Camera, spheres: &Vec<&Sphere>) -> Vec<Vec3<f64>> {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
-    let angle = (PI * 0.5 * cam.fov / 180.).tan();
+    let angle = cam.fov.to_radians().tan();
     let inv_width = 1. / cam.width as f64;
     let inv_height = 1. / cam.height as f64;
     let mut pixels: Vec<Vec3<f64>> =
@@ -55,16 +45,12 @@ pub fn march (cam: &Camera, spheres: &Vec<&Sphere>) -> Vec<Vec3<f64>> {
             let yy: f64 = (1. - 2. * ((y as f64 + 0.5) * inv_height)) * angle;
             let ray = Ray {
                 origin: cam.eye,
-                dir: (Vec3 { x: xx, y: yy, z: -1. }).normalize()
+                dir: ((Vec3 { x: xx, y: yy, z: -1. }).normalize() + cam.dir()).normalize()
             };
             let color = trace(&ray, spheres);
-//            println!("pixel: {} color: {}", y * cam.width + x, color);
             pixels.push(color);
         }
-//        println!("Row!");
     }
-//    println!("width {}, height {}, mul {}", cam.width, cam.height, cam.width * cam.height);
-//    process::exit(0);
     pixels
 }
 
@@ -77,7 +63,6 @@ fn trace(ray: &Ray, spheres: &Vec<&Sphere>)
         let mut t1 = INFINITY;
         let _ = spheres[i].intersect(ray, &mut t0, &mut t1);
         if t0 < 0. { t0 = t1 };
-//        println!("t0: {}, tnear: {}", t0, tnear);
         if t0 < tnear {
             tnear = t0;
             sphere = Some(spheres[i]);

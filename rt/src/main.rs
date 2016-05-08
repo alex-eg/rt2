@@ -1,6 +1,7 @@
 extern crate sdl2;
 extern crate nalgebra as na;
 extern crate rand;
+extern crate num_traits;
 
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::event::Event;
@@ -8,14 +9,19 @@ use sdl2::keyboard::Keycode;
 use sdl2::render::TextureAccess;
 use std::{thread};
 use std::time::Duration;
+
 use na::Vec3;
+
+use num_traits::identities::Zero;
 
 const WIDTH: u32 = 640;
 const HEIGHT: u32 = 480;
 
 mod raytracer;
+mod camera;
 
-use raytracer::{Camera, Sphere, march};
+use raytracer::{Sphere, march};
+use camera::{Camera, CamBuilder};
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -33,10 +39,14 @@ fn main() {
     let mut pixels: [u8; WIDTH as usize * HEIGHT as usize * 4] =
         [0; WIDTH as usize * HEIGHT as usize * 4];
 
-    let camera = Camera { eye: Vec3 { x: 0., y: 0., z: 0.,},
-                          fov: 30.0,
-                          width: WIDTH,
-                          height: HEIGHT };
+    let mut camera = CamBuilder::new()
+        .eye(Vec3::zero())
+        .center(-Vec3::z())
+        .fov(30.)
+        .width(WIDTH)
+        .height(HEIGHT)
+        .up(Vec3 { x: -1., y: 0., z: 0.})
+        .build();
 
     let sphere1 = Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
                            radius: 5. };
@@ -55,12 +65,12 @@ fn main() {
     let sphere8 = Sphere { center: Vec3 { x: 1., y: 1., z: -20. },
                            radius: 5. };
     let spheres = vec![
-        //  &sphere1,
-        //  &sphere2,
-        //  &sphere3,
-        //  &sphere4,
-        //  &sphere5,
-        //  &sphere6,
+        &sphere1,
+        &sphere2,
+        &sphere3,
+        &sphere4,
+        &sphere5,
+        &sphere6,
         &sphere7,
         &sphere8,
     ];
@@ -77,6 +87,31 @@ fn main() {
                 | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'running
                 },
+
+                Event::KeyDown { keycode: Some(Keycode::Q), .. } => {
+                    camera.yaw(1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::E), .. } => {
+                    camera.yaw(-1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Up), .. } => {
+                    camera.pitch(1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Down), .. } => {
+                    camera.pitch(-1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Right), .. } => {
+                    camera.roll(1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Left), .. } => {
+                    camera.roll(-1.)
+                },
+
                 _ => ()
             }
         }
@@ -92,6 +127,6 @@ fn main() {
         renderer.clear();
         renderer.copy(&texture, None, None);
         renderer.present();
-        thread::sleep(Duration::from_millis(100));
+        thread::sleep(Duration::from_millis(10));
     }
 }
