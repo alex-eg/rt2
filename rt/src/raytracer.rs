@@ -1,7 +1,7 @@
 use na::Vec3;
 use std::f64::consts::PI;
 use std::f64::INFINITY;
-use na::{Norm, Dot};
+use na::{Norm, Dot, Cross};
 use camera::Camera;
 
 struct Ray {
@@ -37,15 +37,15 @@ pub fn march (cam: &Camera, spheres: &Vec<&Sphere>) -> Vec<Vec3<f64>> {
     let inv_height = 1. / cam.height as f64;
     let mut pixels: Vec<Vec3<f64>> =
         Vec::with_capacity((cam.height * cam.width) as usize);
-
+    let right = cam.up.cross(&cam.dir()).normalize();
     for y in 0..cam.height {
         for x in 0..cam.width {
-            let xx: f64 = (2. * ((x as f64 + 0.5) * inv_width) - 1.)
+            let xx = right * (2. * ((x as f64 + 0.5) * inv_width) - 1.)
                 * angle * aspect;
-            let yy: f64 = (1. - 2. * ((y as f64 + 0.5) * inv_height)) * angle;
+            let yy = cam.up * (1. - 2. * ((y as f64 + 0.5) * inv_height)) * angle;
             let ray = Ray {
                 origin: cam.eye,
-                dir: ((Vec3 { x: xx, y: yy, z: -1. }).normalize() + cam.dir()).normalize()
+                dir: (cam.dir().normalize() + xx + yy).normalize()
             };
             let color = trace(&ray, spheres);
             pixels.push(color);
