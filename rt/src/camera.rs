@@ -111,4 +111,15 @@ impl Camera {
         self.center = self.eye + new_view;
         self.up = new_view.cross(&side).normalize();
     }
+
+    pub fn mov_fwd(&mut self, dist: f64) {
+        let dir = self.dir;
+        self.eye = self.eye + dir * dist;
+    }
+
+    pub fn mov_side(&mut self, dist: f64) {
+        let dir = self.dir;
+        let side = self.up.cross(&dir);
+        self.eye = self.eye + side * dist;
+    }
 }

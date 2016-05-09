@@ -112,6 +112,23 @@ fn main() {
                     camera.roll(-1.)
                 },
 
+                Event::KeyDown { keycode: Some(Keycode::W), .. } => {
+                    camera.mov_fwd(1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::S), .. } => {
+                    camera.mov_fwd(-1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::A), .. } => {
+                    camera.mov_side(-1.)
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::D), .. } => {
+                    camera.mov_side(1.)
+                },
+
+
                 _ => ()
             }
         }
