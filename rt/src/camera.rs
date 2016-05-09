@@ -1,5 +1,5 @@
 use na::{Vec3, Rot3};
-use na::{Norm, Dot, Cross};
+use na::{Norm, Cross};
 
 use num::traits::Zero;
 
