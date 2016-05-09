@@ -1,5 +1,4 @@
 use na::Vec3;
-use std::f64::consts::PI;
 use std::f64::INFINITY;
 use na::{Norm, Dot, Cross};
 use camera::Camera;
@@ -92,7 +91,7 @@ fn trace(ray: &Ray, spheres: &Vec<&Sphere>)
                     break 'shadow;
                 }
             }
-            let mut color: Vec3<f64> = Vec3 { x: 1.0, y: 0., z: 0. }
+            let color: Vec3<f64> = Vec3 { x: 1.0, y: 0., z: 0. }
                 * transmission
                 * if nhit.dot(&light_dir) > 0. { nhit.dot(&light_dir) }
                   else { 0. }

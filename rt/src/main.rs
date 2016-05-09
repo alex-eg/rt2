@@ -21,7 +21,7 @@ mod raytracer;
 mod camera;
 
 use raytracer::{Sphere, march};
-use camera::{Camera, CamBuilder};
+use camera::CamBuilder;
 
 fn main() {
     let context = sdl2::init().unwrap();
