@@ -48,7 +48,7 @@ fn main() {
         .fov(30.)
         .width(CAM_WIDTH)
         .height(CAM_HEIGHT)
-        .up(Vec3 { x: -1., y: 0., z: 0.})
+        .up(Vec3 { x: -1., y: 0., z: 0. })
         .build();
 
     let sphere1 = Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
