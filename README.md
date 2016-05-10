@@ -4,6 +4,9 @@ Rust real-time raytracer
 
 Build and run
 -------------
+
+Make sure you have *SDL2* library installed.
+
 ```
 $ cd rt
 $ cargo build --release
