@@ -63,9 +63,11 @@ fn main() {
                            radius: 5. };
     let sphere6 = Sphere { center: Vec3 { x: -20., y: 20., z: -20. },
                            radius: 5. };
-    let sphere7 = Sphere { center: Vec3 { x: 2., y: 2., z: -20. },
+    let sphere7 = Sphere { center: Vec3 { x: -20., y: -20., z: 20. },
                            radius: 5. };
-    let sphere8 = Sphere { center: Vec3 { x: 1., y: 1., z: -20. },
+    let sphere8 = Sphere { center: Vec3 { x: -20., y: -20., z: -20. },
+                           radius: 5. };
+    let sphere9 = Sphere { center: Vec3 { x: 0., y: 0., z: 0. },
                            radius: 5. };
     let spheres = vec![
         &sphere1,
@@ -76,6 +78,7 @@ fn main() {
         &sphere6,
         &sphere7,
         &sphere8,
+        &sphere9
     ];
 
     renderer.clear();
