@@ -43,8 +43,8 @@ fn main() {
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
     let mut camera = CamBuilder::new()
-        .eye(Vec3::zero())
-        .center(-Vec3::z())
+        .eye(Vec3 { x: 0., y: 0., z: 60. })
+        .center(Vec3 { x: 0., y: 0., z: 59. })
         .fov(30.)
         .width(CAM_WIDTH)
         .height(CAM_HEIGHT)
