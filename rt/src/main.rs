@@ -14,8 +14,11 @@ use na::Vec3;
 
 use num::traits::Zero;
 
-const WIDTH: u32 = 640;
-const HEIGHT: u32 = 480;
+const WIDTH: u32 = 800;
+const HEIGHT: u32 = 600;
+
+const CAM_WIDTH: u32 = 160;
+const CAM_HEIGHT: u32 = 120;
 
 mod raytracer;
 mod camera;
@@ -35,16 +38,16 @@ fn main() {
     let mut renderer = window.renderer().build().unwrap();
     let mut texture = renderer.create_texture(PixelFormatEnum::RGB24,
                                               TextureAccess::Static,
-                                              WIDTH, HEIGHT).unwrap();
-    let mut pixels: [u8; WIDTH as usize * HEIGHT as usize * 4] =
-        [0; WIDTH as usize * HEIGHT as usize * 4];
+                                              CAM_WIDTH, CAM_HEIGHT).unwrap();
+    const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
+    let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
     let mut camera = CamBuilder::new()
         .eye(Vec3::zero())
         .center(-Vec3::z())
         .fov(30.)
-        .width(WIDTH)
-        .height(HEIGHT)
+        .width(CAM_WIDTH)
+        .height(CAM_HEIGHT)
         .up(Vec3 { x: -1., y: 0., z: 0.})
         .build();
 
@@ -140,7 +143,7 @@ fn main() {
             pixels[i + 2] = (v.z * 255.) as u8;
             i += 3;
         }
-        let _ = texture.update(None, &pixels, WIDTH as usize * 3);
+        let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
         renderer.clear();
         renderer.copy(&texture, None, None);
         renderer.present();
