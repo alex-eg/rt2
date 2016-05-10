@@ -92,11 +92,11 @@ fn main() {
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::Q), .. } => {
-                    camera.yaw(1.)
+                    camera.roll(-1.)
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::E), .. } => {
-                    camera.yaw(-1.)
+                    camera.roll(1.)
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::Up), .. } => {
@@ -108,11 +108,11 @@ fn main() {
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::Right), .. } => {
-                    camera.roll(1.)
+                    camera.yaw(-1.)
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::Left), .. } => {
-                    camera.roll(-1.)
+                    camera.yaw(1.)
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::W), .. } => {
