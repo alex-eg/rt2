@@ -43,12 +43,12 @@ fn main() {
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
     let mut camera = CamBuilder::new()
-        .eye(Vec3 { x: 0., y: 0., z: 60. })
-        .center(Vec3 { x: 0., y: 0., z: 59. })
+        .eye(Vec3 { x: 0., y: 0., z: -60. })
+        .center(Vec3 { x: 0., y: 0., z: -59. })
         .fov(30.)
         .width(CAM_WIDTH)
         .height(CAM_HEIGHT)
-        .up(Vec3 { x: -1., y: 0., z: 0. })
+        .up(Vec3 { x: 0., y: -1., z: 0. })
         .build();
 
     let sphere1 = Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
