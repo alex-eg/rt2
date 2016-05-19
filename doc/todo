@@ -3,13 +3,13 @@
 * [0/6] Overall
  * [-] Raytracer
    - [ ] BVH structure
-   - [ ] Main algorithm
-     + [ ] Ray march
+   - [-] Main algorithm
+     + [X] Ray march
      + [ ] Frustum culling
      + [ ] Coherence checks
    - [-] Intersection checks
      + [X] Sphere
-     + [ ] Box
+     + [X] Box
      + [ ] Triangle
 
    - [ ] Material support
@@ -17,11 +17,11 @@
      + [ ] BRDF (lol, impossible)
 
    - [ ] SIMD enhancement
-   - [ ] OpenGL enhancement
+   - [ ] OpenGL enhancement // Probably? I can forsee very much fun with z-buffer
 
- * [ ] Graphics
+ * [-] Graphics
    - [ ] Scene graph
-   - [ ] Movable camera
+   - [X] Movable camera // Yay! Inplemented in #58e512
    - [ ] Transformation stack
 
  * [ ] Utilities
