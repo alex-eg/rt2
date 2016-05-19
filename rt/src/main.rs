@@ -12,8 +12,6 @@ use std::time::Duration;
 
 use na::Vec3;
 
-use num::traits::Zero;
-
 const WIDTH: u32 = 800;
 const HEIGHT: u32 = 600;
 
@@ -22,9 +20,11 @@ const CAM_HEIGHT: u32 = 120;
 
 mod raytracer;
 mod camera;
+mod geometry;
 
-use raytracer::{Sphere, march};
+use raytracer::march;
 use camera::CamBuilder;
+use geometry::Object;
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -51,25 +51,27 @@ fn main() {
         .up(Vec3 { x: 0., y: -1., z: 0. })
         .build();
 
-    let sphere1 = Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
-                           radius: 5. };
-    let sphere2 = Sphere { center: Vec3 { x: 20., y: 20., z: -20. },
-                           radius: 5. };
-    let sphere3 = Sphere { center: Vec3 { x: 20., y: -20., z: 20. },
-                           radius: 5. };
-    let sphere4 = Sphere { center: Vec3 { x: 20., y: -20., z: -20. },
-                           radius: 5. };
-    let sphere5 = Sphere { center: Vec3 { x: -20., y: 20., z: 20. },
-                           radius: 5. };
-    let sphere6 = Sphere { center: Vec3 { x: -20., y: 20., z: -20. },
-                           radius: 5. };
-    let sphere7 = Sphere { center: Vec3 { x: -20., y: -20., z: 20. },
-                           radius: 5. };
-    let sphere8 = Sphere { center: Vec3 { x: -20., y: -20., z: -20. },
-                           radius: 5. };
-    let sphere9 = Sphere { center: Vec3 { x: 0., y: 0., z: 0. },
-                           radius: 5. };
-    let spheres = vec![
+    let sphere1 = Object::Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
+                                   radius: 5. };
+    let sphere2 = Object::Sphere { center: Vec3 { x: 20., y: 20., z: -20. },
+                                   radius: 5. };
+    let sphere3 = Object::Sphere { center: Vec3 { x: 20., y: -20., z: 20. },
+                                   radius: 5. };
+    let sphere4 = Object::Sphere { center: Vec3 { x: 20., y: -20., z: -20. },
+                                   radius: 5. };
+    let sphere5 = Object::Sphere { center: Vec3 { x: -20., y: 20., z: 20. },
+                                   radius: 5. };
+    let sphere6 = Object::Sphere { center: Vec3 { x: -20., y: 20., z: -20. },
+                                   radius: 5. };
+    let sphere7 = Object::Sphere { center: Vec3 { x: -20., y: -20., z: 20. },
+                                   radius: 5. };
+    let sphere8 = Object::Sphere { center: Vec3 { x: -20., y: -20., z: -20. },
+                                   radius: 5. };
+
+    let box1 = Object::Box { vmin: Vec3 { x: 5., y: 5., z: 5. },
+                             vmax: Vec3 { x: 10., y: 10., z: 10. } };
+
+    let objects: Vec<&Object> = vec![
         &sphere1,
         &sphere2,
         &sphere3,
@@ -78,7 +80,7 @@ fn main() {
         &sphere6,
         &sphere7,
         &sphere8,
-        &sphere9
+        &box1,
     ];
 
     renderer.clear();
@@ -138,7 +140,7 @@ fn main() {
                 _ => ()
             }
         }
-        let updated = march(&camera, &spheres);
+        let updated = march(&camera, &objects);
         let mut i = 0;
         for v in updated {
             pixels[i] = (v.x * 255.) as u8;
