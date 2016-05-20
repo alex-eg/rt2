@@ -24,7 +24,7 @@ mod geometry;
 
 use raytracer::march;
 use camera::CamBuilder;
-use geometry::Object;
+use geometry::{Object, BoxBuilder};
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -43,8 +43,8 @@ fn main() {
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
     let mut camera = CamBuilder::new()
-        .eye(Vec3 { x: 0., y: 0., z: -60. })
-        .center(Vec3 { x: 0., y: 0., z: -59. })
+        .eye(Vec3 { x: 0., y: 0., z: 60. })
+        .center(Vec3 { x: 0., y: 0., z: 59. })
         .fov(30.)
         .width(CAM_WIDTH)
         .height(CAM_HEIGHT)
@@ -71,17 +71,29 @@ fn main() {
     let box1 = Object::Box { vmin: Vec3 { x: 5., y: 5., z: 5. },
                              vmax: Vec3 { x: 10., y: 10., z: 10. } };
 
-    let objects: Vec<&Object> = vec![
-        &sphere1,
-        &sphere2,
-        &sphere3,
-        &sphere4,
-        &sphere5,
-        &sphere6,
-        &sphere7,
-        &sphere8,
-        &box1,
+    let mut objects: Vec<Box<Object>> = vec![
+        Box::new(sphere1),
+        Box::new(sphere2),
+        Box::new(sphere3),
+        Box::new(sphere4),
+        Box::new(sphere5),
+        Box::new(sphere6),
+        Box::new(sphere7),
+        Box::new(sphere8),
+        Box::new(box1),
     ];
+
+    let small_tree = BoxBuilder::new()
+        .add(10, 20, 0, 1)
+        .add(10, 19, 0, 1)
+        .add(10, 18, 1, 1)
+        .add(10, 17, 1, 1)
+        .add(10, 16, 1, 1)
+        .build();
+
+    for b in small_tree {
+        objects.push(b);
+    }
 
     renderer.clear();
     renderer.present();
@@ -121,19 +133,19 @@ fn main() {
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::W), .. } => {
-                    camera.mov_fwd(1.)
+                    camera.mov_fwd(1.);
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::S), .. } => {
-                    camera.mov_fwd(-1.)
+                    camera.mov_fwd(-1.);
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::A), .. } => {
-                    camera.mov_side(-1.)
+                    camera.mov_side(-1.);
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::D), .. } => {
-                    camera.mov_side(1.)
+                    camera.mov_side(1.);
                 },
 
 

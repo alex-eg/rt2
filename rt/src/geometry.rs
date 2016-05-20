@@ -83,7 +83,7 @@ impl Intersect for Object {
 }
 
 impl ComputeColor for Object {
-    fn compute_color(&self, ray: &Ray, tnear: f64, objs: &Vec<&Object>)
+    fn compute_color(&self, ray: &Ray, tnear: f64, objs: &Vec<Box<Object>>)
                      -> Vec3<f64> {
         match *self {
             Object::Sphere { center, .. } => {
@@ -132,7 +132,7 @@ impl ComputeColor for Object {
                 if phit_max.z.abs() < eps { nhit.z = 1. };
 
                 let mut transmission = 1.0;
-                let light_dir = (Vec3 { x: -5., y: 0., z: -15. } - phit)
+                let light_dir = (Vec3 { x: -5., y: 0., z: 15. } - phit)
                     .normalize();
                 let light_color = Vec3 { x: 1., y: 1., z: 1. };
 
@@ -155,5 +155,34 @@ impl ComputeColor for Object {
                 color
             }
         }
+    }
+}
+
+pub struct BoxBuilder {
+    boxes: Vec<Box<Object>>
+}
+
+impl BoxBuilder {
+    pub fn new() -> BoxBuilder {
+        BoxBuilder{ boxes: Vec::new() }
+    }
+
+    /// Adds a square box to vector
+    pub fn add(mut self, x: i32, y: i32, z: i32, size: i32)
+               -> BoxBuilder{
+        assert!(size > 0);
+        let new_box = Box::new(Object::Box
+                               { vmin: Vec3 { x: x as f64,
+                                              y: y as f64,
+                                              z: z as f64 },
+                                 vmax: Vec3 { x: (x + size) as f64,
+                                              y: (y + size) as f64,
+                                              z: (z + size) as f64 } });
+        self.boxes.push(new_box);
+        self
+    }
+
+    pub fn build(self) -> Vec<Box<Object>> {
+        self.boxes
     }
 }

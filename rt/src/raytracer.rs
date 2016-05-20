@@ -10,10 +10,10 @@ pub struct Ray {
 }
 
 pub trait ComputeColor {
-    fn compute_color(&self, &Ray, tnear: f64, &Vec<&Object>) -> Vec3<f64>;
+    fn compute_color(&self, &Ray, tnear: f64, &Vec<Box<Object>>) -> Vec3<f64>;
 }
 
-pub fn march (cam: &Camera, spheres: &Vec<&Object>) -> Vec<Vec3<f64>> {
+pub fn march (cam: &Camera, spheres: &Vec<Box<Object>>) -> Vec<Vec3<f64>> {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
     let angle = cam.fov.to_radians().tan();
     let inv_width = 1. / cam.width as f64;
@@ -38,9 +38,9 @@ pub fn march (cam: &Camera, spheres: &Vec<&Object>) -> Vec<Vec3<f64>> {
     pixels
 }
 
-fn trace(ray: &Ray, objects: &Vec<&Object>) -> Vec3<f64> {
+fn trace(ray: &Ray, objects: &Vec<Box<Object>>) -> Vec3<f64> {
     let mut tnear = INFINITY;
-    let mut object: Option<&Object> = None;
+    let mut object: Option<&Box<Object>> = None;
     for i in 0..objects.len() {
         let mut t0 = INFINITY;
         let mut t1 = INFINITY;
@@ -48,7 +48,7 @@ fn trace(ray: &Ray, objects: &Vec<&Object>) -> Vec3<f64> {
         if t0 < 0. { t0 = t1 };
         if t0 < tnear {
             tnear = t0;
-            object = Some(objects[i]);
+            object = Some(&objects[i]);
         }
     }
     match object {
