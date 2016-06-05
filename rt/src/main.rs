@@ -25,7 +25,7 @@ mod light;
 
 use raytracer::march;
 use camera::CamBuilder;
-use geometry::{Object, BoxBuilder};
+use geometry::{BoxBuilder};
 use light::Light;
 
 fn main() {

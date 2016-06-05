@@ -8,7 +8,7 @@ pub trait Intersect {
 }
 
 #[derive(Copy, Clone)]
-pub enum Object {
+pub enum Shape {
     Sphere {
         radius: f64,
         center: Vec3<f64>,
@@ -20,10 +20,10 @@ pub enum Object {
     }
 }
 
-impl Intersect for Object {
     fn intersect(&self, ray: &Ray, t0: &mut f64, t1: &mut f64) -> bool  {
+impl Shape {
         match *self {
-            Object::Box { vmin, vmax } => {
+            Shape::Box { vmin, vmax } => {
                 let o = ray.origin;
                 let mut d = ray.dir;
 
@@ -66,7 +66,7 @@ impl Intersect for Object {
                 true
             }
 
-            Object::Sphere { radius, center } => {
+            Shape::Sphere { radius, center } => {
                 let l = center - ray.origin;
                 let tca = l.dot(&ray.dir);
                 if tca < 0. { return false; }
@@ -159,7 +159,7 @@ impl ComputeColor for Object {
 }
 
 pub struct BoxBuilder {
-    boxes: Vec<Box<Object>>
+    boxes: Vec<Box<Shape>>
 }
 
 impl BoxBuilder {
@@ -171,7 +171,7 @@ impl BoxBuilder {
     pub fn add(mut self, x: i32, y: i32, z: i32, size: i32)
                -> BoxBuilder{
         assert!(size > 0);
-        let new_box = Box::new(Object::Box
+        let new_box = Box::new(Shape::Box
                                { vmin: Vec3 { x: x as f64,
                                               y: y as f64,
                                               z: z as f64 },
@@ -182,7 +182,7 @@ impl BoxBuilder {
         self
     }
 
-    pub fn build(self) -> Vec<Box<Object>> {
+    pub fn build(self) -> Vec<Box<Shape>> {
         self.boxes
     }
 }
