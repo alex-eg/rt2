@@ -21,12 +21,14 @@ const CAM_HEIGHT: u32 = 120;
 mod raytracer;
 mod camera;
 mod geometry;
+mod material;
 mod light;
 mod object;
 
 use raytracer::march;
 use camera::CamBuilder;
 use geometry::{BoxBuilder};
+use material::Material;
 use light::Light;
 use object::{new_sphere, new_box, Object, shape_to_obect_vector};
 
@@ -45,6 +47,20 @@ fn main() {
                                               CAM_WIDTH, CAM_HEIGHT).unwrap();
     const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
+
+    let red = Material::Lambert{ ambient: Vec3 { x: 0.1, y: 0.1, z: 0.1 },
+                                 diffuse: Vec3 { x: 1., y: 0., z: 0. },
+                                 specular: Vec3 { x: 1., y: 1., z: 1. },
+                                 emission: Vec3 { x: 0., y: 0., z: 0. },
+                                 shininess: 30.0 };
+
+    let blue = Material::Lambert{ ambient: Vec3 { x: 0.1, y: 0.1, z: 0.1 },
+                                  diffuse: Vec3 { x: 0., y: 0.3, z: 1. },
+                                  specular: Vec3 { x: 1., y: 1., z: 1. },
+                                  emission: Vec3 { x: 0., y: 0., z: 0. },
+                                  shininess: 10.0  };
+
+    let green = Material::Plain{ color: Vec3 { x: 0., y: 1., z: 0. } };
 
     let mut camera = CamBuilder::new()
         .eye(Vec3 { x: 0., y: 0., z: 60. })

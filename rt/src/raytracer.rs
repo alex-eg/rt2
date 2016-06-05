@@ -9,10 +9,6 @@ pub struct Ray {
     pub origin: Vec3<f64>
 }
 
-pub trait ComputeColor {
-    fn compute_color(&self, &Ray, tnear: f64, &Vec<Box<Object>>) -> Vec3<f64>;
-}
-
 pub fn march (cam: &Camera, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
               -> Vec<Vec3<f64>> {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
