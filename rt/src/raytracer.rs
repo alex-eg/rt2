@@ -3,6 +3,7 @@ use std::f64::INFINITY;
 use na::{Norm, Cross};
 use camera::Camera;
 use geometry::{Object, Intersect};
+use light::Light;
 
 pub struct Ray {
     pub dir: Vec3<f64>,
@@ -13,7 +14,8 @@ pub trait ComputeColor {
     fn compute_color(&self, &Ray, tnear: f64, &Vec<Box<Object>>) -> Vec3<f64>;
 }
 
-pub fn march (cam: &Camera, spheres: &Vec<Box<Object>>) -> Vec<Vec3<f64>> {
+pub fn march (cam: &Camera, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
+              -> Vec<Vec3<f64>> {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
     let angle = cam.fov.to_radians().tan();
     let inv_width = 1. / cam.width as f64;
@@ -31,14 +33,15 @@ pub fn march (cam: &Camera, spheres: &Vec<Box<Object>>) -> Vec<Vec3<f64>> {
                 origin: cam.eye,
                 dir: (cam.dir + xx + yy).normalize()
             };
-            let color = trace(&ray, spheres);
+            let color = trace(&ray, objects, lights);
             pixels.push(color);
         }
     }
     pixels
 }
 
-fn trace(ray: &Ray, objects: &Vec<Box<Object>>) -> Vec3<f64> {
+fn trace(ray: &Ray, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
+         -> Vec3<f64> {
     let mut tnear = INFINITY;
     let mut object: Option<&Box<Object>> = None;
     for i in 0..objects.len() {

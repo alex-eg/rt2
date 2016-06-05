@@ -21,10 +21,12 @@ const CAM_HEIGHT: u32 = 120;
 mod raytracer;
 mod camera;
 mod geometry;
+mod light;
 
 use raytracer::march;
 use camera::CamBuilder;
 use geometry::{Object, BoxBuilder};
+use light::Light;
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -95,6 +97,12 @@ fn main() {
         objects.push(b);
     }
 
+    let light1 = Light { pos: Vec3 { x: 0., y: 0., z: 5. },
+                         color: Vec3 { x: 1., y: 1., z: 1. } };
+    let lights: Vec<Box<Light>> = vec![
+        Box::new(light1),
+    ];
+
     renderer.clear();
     renderer.present();
 
@@ -152,7 +160,7 @@ fn main() {
                 _ => ()
             }
         }
-        let updated = march(&camera, &objects);
+        let updated = march(&camera, &objects, &lights);
         let mut i = 0;
         for v in updated {
             pixels[i] = (v.x * 255.) as u8;
