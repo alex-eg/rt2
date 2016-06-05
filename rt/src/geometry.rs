@@ -1,7 +1,10 @@
 use na::{Vec3, Norm};
 use raytracer::{Ray, ComputeColor};
 use na::Dot;
+use na::{Vec3, Norm, Dot};
+use raytracer::Ray;
 use num::traits::Zero;
+use std::f64::INFINITY;
 
 #[derive(Copy, Clone)]
 pub enum Shape {
@@ -17,6 +20,35 @@ pub enum Shape {
 }
 
 impl Shape {
+    pub fn get_normal(&self, ray: &Ray, tnear: f64) -> Vec3<f64> {
+        match *self {
+            Shape::Box { vmin, vmax } => {
+                let phit = ray.origin + ray.dir * tnear;
+
+                let phit_min = phit - vmin;
+                let phit_max = phit - vmax;
+                let mut nhit = Vec3::zero();
+                let eps = 1e-6;
+                if phit_min.x.abs() < eps { nhit.x = -1. }
+                if phit_min.y.abs() < eps { nhit.y = -1. }
+                if phit_min.z.abs() < eps { nhit.z = -1. }
+                if phit_max.x.abs() < eps { nhit.x = 1. }
+                if phit_max.y.abs() < eps { nhit.y = 1. }
+                if phit_max.z.abs() < eps { nhit.z = 1. }
+                nhit
+            }
+
+            Shape::Sphere { center, .. } => {
+                let phit = ray.origin + ray.dir * tnear;
+                let mut nhit = (phit - center).normalize();
+                if ray.dir.dot(&nhit) > 0. {
+                    nhit = -nhit;
+                }
+                nhit
+            }
+        }
+    }
+
     pub fn intersect(&self, ray: &Ray) -> (f64, f64) {
         let (mut t0, mut t1) = (INFINITY, INFINITY);
         match *self {
