@@ -1,6 +1,5 @@
-use na::Vec3;
+use na::{Vec3, Norm, Cross};
 use std::f64::INFINITY;
-use na::{Norm, Cross};
 use camera::Camera;
 use light::Light;
 use object::Object;
