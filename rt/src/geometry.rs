@@ -3,10 +3,6 @@ use raytracer::{Ray, ComputeColor};
 use na::Dot;
 use num::traits::Zero;
 
-pub trait Intersect {
-    fn intersect(&self, &Ray, &mut f64, &mut f64) -> bool;
-}
-
 #[derive(Copy, Clone)]
 pub enum Shape {
     Sphere {
@@ -20,8 +16,9 @@ pub enum Shape {
     }
 }
 
-    fn intersect(&self, ray: &Ray, t0: &mut f64, t1: &mut f64) -> bool  {
 impl Shape {
+    pub fn intersect(&self, ray: &Ray) -> (f64, f64) {
+        let (mut t0, mut t1) = (INFINITY, INFINITY);
         match *self {
             Shape::Box { vmin, vmax } => {
                 let o = ray.origin;
@@ -45,38 +42,34 @@ impl Shape {
                 let tymin = (if sign.y { b0.y } else { b1.y } - o.y) * d.y;
                 let tymax = (if sign.y { b1.y } else { b0.y } - o.y) * d.y;
 
-                if tmin > tymax || tymin > tmax { return false };
+                if tmin > tymax || tymin > tmax { return (t0, t1) };
                 if tymin > tmin { tmin = tymin };
                 if tymax < tmax { tmax = tymax };
 
                 let tzmin = (if sign.z { b0.z } else { b1.z } - o.z) * d.z;
                 let tzmax = (if sign.z { b1.z } else { b0.z } - o.z) * d.z;
 
-                if tmin > tzmax || tzmin > tmax { return false };
+                if tmin > tzmax || tzmin > tmax { return (t0, t1) };
                 if tzmin > tmin { tmin = tzmin };
                 if tzmax < tmax { tmax = tzmax };
 
                 if tmin < 0. {
-                    if tmax < 0. { return false };
-                    *t0 = tmax;
+                    if tmax < 0. { return (t0, t1) };
+                    t0 = tmax;
                 } else {
-                    *t0 = tmin;
+                    t0 = tmin;
                 }
-
-                true
+                (t0, t1)
             }
 
             Shape::Sphere { radius, center } => {
                 let l = center - ray.origin;
                 let tca = l.dot(&ray.dir);
-                if tca < 0. { return false; }
+                if tca < 0. { return (t0, t1); }
                 let d2 = l.dot(&l) - tca * tca;
                 let r2 = radius * radius;
-                if d2 > r2 { return false; }
+                if d2 > r2 { return (t0, t1); }
                 let thc: f64 = (r2 - d2).sqrt();
-                *t0 = tca - thc;
-                *t1 = tca + thc;
-                true
             }
         }
     }
@@ -153,6 +146,9 @@ impl ComputeColor for Object {
                       else { 0. }
                     * light_color;
                 color
+                t0 = tca - thc;
+                t1 = tca + thc;
+                (t0, t1)
             }
         }
     }

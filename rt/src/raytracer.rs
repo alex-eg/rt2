@@ -45,9 +45,7 @@ fn trace(ray: &Ray, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
     let mut tnear = INFINITY;
     let mut object: Option<&Box<Object>> = None;
     for i in 0..objects.len() {
-        let mut t0 = INFINITY;
-        let mut t1 = INFINITY;
-        let _ = objects[i].intersect(ray, &mut t0, &mut t1);
+        let (mut t0, t1) = objects[i].shape.intersect(ray);
         if t0 < 0. { t0 = t1 };
         if t0 < tnear {
             tnear = t0;
