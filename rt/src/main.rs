@@ -22,11 +22,13 @@ mod raytracer;
 mod camera;
 mod geometry;
 mod light;
+mod object;
 
 use raytracer::march;
 use camera::CamBuilder;
 use geometry::{BoxBuilder};
 use light::Light;
+use object::{new_sphere, new_box, Object, shape_to_obect_vector};
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -53,25 +55,35 @@ fn main() {
         .up(Vec3 { x: 0., y: -1., z: 0. })
         .build();
 
-    let sphere1 = Object::Sphere { center: Vec3 { x: 20., y: 20., z: 20. },
-                                   radius: 5. };
-    let sphere2 = Object::Sphere { center: Vec3 { x: 20., y: 20., z: -20. },
-                                   radius: 5. };
-    let sphere3 = Object::Sphere { center: Vec3 { x: 20., y: -20., z: 20. },
-                                   radius: 5. };
-    let sphere4 = Object::Sphere { center: Vec3 { x: 20., y: -20., z: -20. },
-                                   radius: 5. };
-    let sphere5 = Object::Sphere { center: Vec3 { x: -20., y: 20., z: 20. },
-                                   radius: 5. };
-    let sphere6 = Object::Sphere { center: Vec3 { x: -20., y: 20., z: -20. },
-                                   radius: 5. };
-    let sphere7 = Object::Sphere { center: Vec3 { x: -20., y: -20., z: 20. },
-                                   radius: 5. };
-    let sphere8 = Object::Sphere { center: Vec3 { x: -20., y: -20., z: -20. },
-                                   radius: 5. };
+    let sphere1 = new_sphere(Vec3 { x: 20., y: 20., z: 20. },
+                             5., &red);
+    let sphere2 = new_sphere(Vec3 { x: 20., y: 20., z: -20. },
+                             5., &red);
+    let sphere3 = new_sphere(Vec3 { x: 20., y: -20., z: 20. },
+                             5., &red);
+    let sphere4 = new_sphere(Vec3 { x: 20., y: -20., z: -20. },
+                             5., &red);
+    let sphere5 = new_sphere(Vec3 { x: -20., y: 20., z: 20. },
+                             5., &green);
+    let sphere6 = new_sphere(Vec3 { x: -20., y: 20., z: -20. },
+                             5., &green);
+    let sphere7 = new_sphere(Vec3 { x: -20., y: -20., z: 20. },
+                             5., &red);
+    let sphere8 = new_sphere(Vec3 { x: -20., y: -20., z: -20. },
+                             5., &red);
 
-    let box1 = Object::Box { vmin: Vec3 { x: 5., y: 5., z: 5. },
-                             vmax: Vec3 { x: 10., y: 10., z: 10. } };
+
+    let box1 = new_box(Vec3 { x: 5., y: 5., z: 5. },
+                       Vec3 { x: 10., y: 10., z: 10. },
+                       &blue);
+
+    let small_tree = BoxBuilder::new()
+        .add(10, 20, 0, 1)
+        .add(10, 19, 0, 1)
+        .add(10, 18, 1, 1)
+        .add(10, 17, 1, 1)
+        .add(10, 16, 1, 1)
+        .build();
 
     let mut objects: Vec<Box<Object>> = vec![
         Box::new(sphere1),
@@ -85,15 +97,8 @@ fn main() {
         Box::new(box1),
     ];
 
-    let small_tree = BoxBuilder::new()
-        .add(10, 20, 0, 1)
-        .add(10, 19, 0, 1)
-        .add(10, 18, 1, 1)
-        .add(10, 17, 1, 1)
-        .add(10, 16, 1, 1)
-        .build();
-
-    for b in small_tree {
+    let small_tree_shapes = shape_to_obect_vector(&small_tree, &blue);
+    for b in small_tree_shapes {
         objects.push(b);
     }
 

@@ -2,8 +2,8 @@ use na::Vec3;
 use std::f64::INFINITY;
 use na::{Norm, Cross};
 use camera::Camera;
-use geometry::{Object, Intersect};
 use light::Light;
+use object::Object;
 
 pub struct Ray {
     pub dir: Vec3<f64>,
