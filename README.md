@@ -5,7 +5,7 @@ Rust real-time raytracer
 Build and run
 -------------
 
-Make sure you have *SDL2* library installed.
+Make sure you have [**SDL2**](https://www.libsdl.org/) library installed.
 
 ```
 $ cd rt
