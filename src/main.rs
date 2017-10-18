@@ -10,7 +10,7 @@ use sdl2::render::TextureAccess;
 use std::{thread};
 use std::time::Duration;
 
-use na::Vec3;
+use na::Vector3 as Vec3;
 
 const WIDTH: u32 = 800;
 const HEIGHT: u32 = 600;
@@ -41,56 +41,57 @@ fn main() {
         .build()
         .unwrap();
 
-    let mut renderer = window.renderer().build().unwrap();
-    let mut texture = renderer.create_texture(PixelFormatEnum::RGB24,
+    let mut canvas = window.into_canvas().build().unwrap();
+    let tex_creator = canvas.texture_creator();
+    let mut texture = tex_creator.create_texture(PixelFormatEnum::RGB24,
                                               TextureAccess::Static,
                                               CAM_WIDTH, CAM_HEIGHT).unwrap();
     const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
-    let red = Material::Lambert{ ambient: Vec3 { x: 0.1, y: 0.1, z: 0.1 },
-                                 diffuse: Vec3 { x: 1., y: 0., z: 0. },
-                                 specular: Vec3 { x: 1., y: 1., z: 1. },
-                                 emission: Vec3 { x: 0., y: 0., z: 0. },
+    let red = Material::Lambert{ ambient: Vec3::new(0.1, 0.1, 0.1),
+                                 diffuse: Vec3::new(1., 0., 0.),
+                                 specular: Vec3::new(1., 1., 1.),
+                                 emission: Vec3::new(0., 0., 0.),
                                  shininess: 30.0 };
 
-    let blue = Material::Lambert{ ambient: Vec3 { x: 0.1, y: 0.1, z: 0.1 },
-                                  diffuse: Vec3 { x: 0., y: 0.3, z: 1. },
-                                  specular: Vec3 { x: 1., y: 1., z: 1. },
-                                  emission: Vec3 { x: 0., y: 0., z: 0. },
+    let blue = Material::Lambert{ ambient: Vec3::new(0.1, 0.1, 0.1),
+                                  diffuse: Vec3::new(0., 0.3, 1.),
+                                  specular: Vec3::new(1., 1., 1.),
+                                  emission: Vec3::new(0., 0., 0.),
                                   shininess: 10.0  };
 
-    let green = Material::Plain{ color: Vec3 { x: 0., y: 1., z: 0. } };
+    let green = Material::Plain{ color: Vec3::new(0., 1., 0.) };
 
     let mut camera = CamBuilder::new()
-        .eye(Vec3 { x: 0., y: 0., z: 60. })
-        .center(Vec3 { x: 0., y: 0., z: 59. })
+        .eye(Vec3::new(0., 0., 60.))
+        .center(Vec3::new(0., 0., 59.))
         .fov(30.)
         .width(CAM_WIDTH)
         .height(CAM_HEIGHT)
-        .up(Vec3 { x: 0., y: -1., z: 0. })
+        .up(Vec3::new(0., -1., 0.))
         .build();
 
-    let sphere1 = new_sphere(Vec3 { x: 20., y: 20., z: 20. },
+    let sphere1 = new_sphere(Vec3::new(20., 20., 20.),
                              5., &red);
-    let sphere2 = new_sphere(Vec3 { x: 20., y: 20., z: -20. },
+    let sphere2 = new_sphere(Vec3::new(20., 20., -20.),
                              5., &red);
-    let sphere3 = new_sphere(Vec3 { x: 20., y: -20., z: 20. },
+    let sphere3 = new_sphere(Vec3::new(20., -20., 20.),
                              5., &red);
-    let sphere4 = new_sphere(Vec3 { x: 20., y: -20., z: -20. },
+    let sphere4 = new_sphere(Vec3::new(20., -20., -20.),
                              5., &red);
-    let sphere5 = new_sphere(Vec3 { x: -20., y: 20., z: 20. },
+    let sphere5 = new_sphere(Vec3::new(-20., 20., 20.),
                              5., &green);
-    let sphere6 = new_sphere(Vec3 { x: -20., y: 20., z: -20. },
+    let sphere6 = new_sphere(Vec3::new(-20., 20., -20.),
                              5., &green);
-    let sphere7 = new_sphere(Vec3 { x: -20., y: -20., z: 20. },
+    let sphere7 = new_sphere(Vec3::new(-20., -20., 20.),
                              5., &red);
-    let sphere8 = new_sphere(Vec3 { x: -20., y: -20., z: -20. },
+    let sphere8 = new_sphere(Vec3::new(-20., -20., -20.),
                              5., &red);
 
 
-    let box1 = new_box(Vec3 { x: 5., y: 5., z: 5. },
-                       Vec3 { x: 10., y: 10., z: 10. },
+    let box1 = new_box(Vec3::new(5., 5., 5.),
+                       Vec3::new(10., 10., 10.),
                        &blue);
 
     let small_tree = BoxBuilder::new()
@@ -118,14 +119,14 @@ fn main() {
         objects.push(b);
     }
 
-    let light1 = Light { pos: Vec3 { x: 0., y: 0., z: 5. },
-                         color: Vec3 { x: 1., y: 1., z: 1. } };
+    let light1 = Light { pos: Vec3::new(0., 0., 5.),
+                         color: Vec3::new(1., 1., 1.) };
     let lights: Vec<Box<Light>> = vec![
         Box::new(light1),
     ];
 
-    renderer.clear();
-    renderer.present();
+    canvas.clear();
+    canvas.present();
 
     let mut pump = context.event_pump().unwrap();
 
@@ -190,9 +191,9 @@ fn main() {
             i += 3;
         }
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
-        renderer.clear();
-        renderer.copy(&texture, None, None);
-        renderer.present();
+        canvas.clear();
+        canvas.copy(&texture, None, None);
+        canvas.present();
         thread::sleep(Duration::from_millis(10));
     }
 }

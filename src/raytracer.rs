@@ -1,4 +1,4 @@
-use na::{Vec3, Norm, Cross};
+use na::Vector3 as Vec3;
 use std::f64::INFINITY;
 use camera::Camera;
 use light::Light;
@@ -47,5 +47,5 @@ fn trace(ray: &Ray, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
             return objects[i].compute_color(ray, tnear, nhit, objects, lights);
         }
     }
-    Vec3 { x: 0., y: 0.5, z: 1. } // blue background
+    Vec3::new(0., 0.5, 1.) // blue background
 }

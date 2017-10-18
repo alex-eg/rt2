@@ -1,4 +1,4 @@
-use na::Vec3;
+use na::Vector3 as Vec3;
 
 pub struct Light {
     pub pos: Vec3<f64>,

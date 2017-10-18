@@ -1,4 +1,4 @@
-use na::{Vec3, Norm, Dot};
+use na::Vector3 as Vec3;
 use num::traits::Zero;
 use raytracer::Ray;
 use light::Light;
@@ -36,6 +36,9 @@ impl Material {
     pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>,
                          objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
                          -> Vec3<f64> {
+        let mul = |l: &Vec3<f64>, r: &Vec3<f64>| -> Vec3<f64> {
+            Vec3::new(l.x * r.x, l.y * r.y, l.z * r.z)
+        };
         match *self {
             Material::Plain { color } => { color }
             Material::Lambert { ambient, diffuse, specular, emission,
@@ -45,11 +48,11 @@ impl Material {
                 for l in lights {
                     let ldir = (l.pos - phit).normalize();
                     let ndotl = nhit.dot(&ldir);
-                    let lambert = diffuse * l.color * max(ndotl, 0.0);
+                    let lambert = mul(&l.color, &diffuse) * max(ndotl, 0.0);
 
                     let halfv = (-ray.dir + ldir).normalize();
                     let ndoth = nhit.dot(&halfv);
-                    let phong = specular * l.color
+                    let phong = mul(&l.color, &specular)
                         * max(ndoth, 0.0).powf(shininess);
 
                     color = color + lambert + phong;

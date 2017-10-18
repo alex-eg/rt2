@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["taptap <alexey.e.egorov@gmail.com>"]
 
 [dependencies]
-num = "0.1"
-sdl2 = "0.17"
-gl = "0.6.0"
-nalgebra = "0.6.0"
-rand = "0.3.14"
+num = "0.1.40"
+sdl2 = "0.30.0"
+gl = "0.6.3"
+nalgebra = "0.13.1"
+rand = "0.3.17"

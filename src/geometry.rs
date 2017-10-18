@@ -1,4 +1,4 @@
-use na::{Vec3, Norm, Dot};
+use na::Vector3 as Vec3;
 use raytracer::Ray;
 use num::traits::Zero;
 use std::f64::INFINITY;
@@ -57,7 +57,7 @@ impl Shape {
                 d.y = 1. / d.y;
                 d.z = 1. / d.z;
 
-                let mut sign: Vec3<bool> = Vec3{ x: true, y: true, z: true };
+                let mut sign: Vec3<bool> = Vec3::new(true, true, true);
                 sign.x = d.x > 0.;
                 sign.y = d.y > 0.;
                 sign.z = d.z > 0.;
@@ -121,12 +121,12 @@ impl BoxBuilder {
                -> BoxBuilder{
         assert!(size > 0);
         let new_box = Box::new(Shape::Box
-                               { vmin: Vec3 { x: x as f64,
-                                              y: y as f64,
-                                              z: z as f64 },
-                                 vmax: Vec3 { x: (x + size) as f64,
-                                              y: (y + size) as f64,
-                                              z: (z + size) as f64 } });
+                               { vmin: Vec3::new(x as f64,
+                                            y as f64,
+                                            z as f64),
+                                 vmax: Vec3::new((x + size) as f64,
+                                             (y + size) as f64,
+                                             (z + size) as f64) });
         self.boxes.push(new_box);
         self
     }

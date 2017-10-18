@@ -1,5 +1,4 @@
-use na::{Vec3, Rot3};
-use na::{Norm, Cross};
+use na::{Vector3 as Vec3, Rotation3 as Rot3, Unit};
 
 use num::traits::Zero;
 
@@ -85,19 +84,19 @@ impl CamBuilder {
 
 impl Camera {
     pub fn roll(&mut self, angle: f64) {
-        let rot = Rot3::new(self.dir * angle.to_radians());
-        self.up = (self.up * rot).normalize();
+        let rot = Rot3::from_axis_angle(&Unit::new_normalize(self.dir), angle.to_radians());
+        self.up = (rot * self.up).normalize();
     }
 
     pub fn yaw(&mut self, angle: f64) {
-        let rot = Rot3::new(self.up * angle.to_radians());
-        self.dir = self.dir * rot;
+        let rot = Rot3::from_axis_angle(&Unit::new_normalize(self.up), angle.to_radians());
+        self.dir = rot * self.dir;
     }
 
     pub fn pitch(&mut self, angle: f64) {
         let side = self.up.cross(&self.dir);
-        let rot = Rot3::new(side * angle.to_radians());
-        self.dir = self.dir * rot;
+        let rot = Rot3::from_axis_angle(&Unit::new_normalize(side), angle.to_radians());
+        self.dir = rot * self.dir;
         self.up = self.dir.cross(&side).normalize();
     }
 
