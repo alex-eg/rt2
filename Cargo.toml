@@ -1,11 +1,13 @@
 [package]
 name = "rt"
 version = "0.1.0"
-authors = ["taptap <alexey.e.egorov@gmail.com>"]
+authors = ["alex-eg <alexey.e.egorov@gmail.com>"]
 
 [dependencies]
+num_cpus = "1.8.0"
 num = "0.1.40"
 sdl2 = "0.30.0"
 gl = "0.6.3"
 nalgebra = "0.13.1"
 rand = "0.3.17"
+crossbeam-utils = "0.3.2"

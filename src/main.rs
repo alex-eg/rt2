@@ -73,26 +73,26 @@ fn main() {
         .build();
 
     let sphere1 = new_sphere(Vec3::new(20., 20., 20.),
-                             5., &red);
+                             5., red);
     let sphere2 = new_sphere(Vec3::new(20., 20., -20.),
-                             5., &red);
+                             5., red);
     let sphere3 = new_sphere(Vec3::new(20., -20., 20.),
-                             5., &red);
+                             5., red);
     let sphere4 = new_sphere(Vec3::new(20., -20., -20.),
-                             5., &red);
+                             5., red);
     let sphere5 = new_sphere(Vec3::new(-20., 20., 20.),
-                             5., &green);
+                             5., green);
     let sphere6 = new_sphere(Vec3::new(-20., 20., -20.),
-                             5., &green);
+                             5., green);
     let sphere7 = new_sphere(Vec3::new(-20., -20., 20.),
-                             5., &red);
+                             5., red);
     let sphere8 = new_sphere(Vec3::new(-20., -20., -20.),
-                             5., &red);
+                             5., red);
 
 
     let box1 = new_box(Vec3::new(5., 5., 5.),
                        Vec3::new(10., 10., 10.),
-                       &blue);
+                       blue);
 
     let small_tree = BoxBuilder::new()
         .add(10, 20, 0, 1)
@@ -114,7 +114,7 @@ fn main() {
         Box::new(box1),
     ];
 
-    let small_tree_shapes = shape_to_obect_vector(&small_tree, &blue);
+    let small_tree_shapes = shape_to_obect_vector(&small_tree, blue);
     for b in small_tree_shapes {
         objects.push(b);
     }
@@ -183,12 +183,8 @@ fn main() {
             }
         }
         let updated = march(&camera, &objects, &lights);
-        let mut i = 0;
-        for v in updated {
-            pixels[i] = (v.x * 255.) as u8;
-            pixels[i + 1] = (v.y * 255.) as u8;
-            pixels[i + 2] = (v.z * 255.) as u8;
-            i += 3;
+        for i in 0..updated.len() {
+            pixels[i] = (updated[i] * 255.) as u8;
         }
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
         canvas.clear();
