@@ -183,12 +183,8 @@ fn main() {
             }
         }
         let updated = march(&camera, &objects, &lights);
-        let mut i = 0;
-        for v in updated {
-            pixels[i] = (v.x * 255.) as u8;
-            pixels[i + 1] = (v.y * 255.) as u8;
-            pixels[i + 2] = (v.z * 255.) as u8;
-            i += 3;
+        for i in 0..updated.len() {
+            pixels[i] = (updated[i] * 255.) as u8;
         }
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
         canvas.clear();
