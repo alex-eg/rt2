@@ -192,7 +192,7 @@ fn main() {
         }
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
         canvas.clear();
-        canvas.copy(&texture, None, None);
+        canvas.copy(&texture, None, None).unwrap();
         canvas.present();
         thread::sleep(Duration::from_millis(10));
     }

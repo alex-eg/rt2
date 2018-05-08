@@ -12,9 +12,8 @@ pub struct Object<'a> {
 
 impl<'a> Object<'a> {
     pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>,
-                         objects: &Vec<Box<Object>>,
                          lights: &Vec<Box<Light>>) -> Vec3<f64> {
-        self.mat.compute_color(ray, tnear, nhit, objects, lights)
+        self.mat.compute_color(ray, tnear, nhit, lights)
     }
 }
 

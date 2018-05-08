@@ -44,7 +44,7 @@ fn trace(ray: &Ray, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
         if t0 < tnear {
             tnear = t0;
             let nhit = objects[i].shape.get_normal(ray, tnear);
-            return objects[i].compute_color(ray, tnear, nhit, objects, lights);
+            return objects[i].compute_color(ray, tnear, nhit, lights);
         }
     }
     Vec3::new(0., 0.5, 1.) // blue background
