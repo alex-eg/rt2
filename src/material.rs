@@ -3,7 +3,7 @@ use num::traits::Zero;
 use raytracer::Ray;
 use light::Light;
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub enum Material {
     Plain {
         color: Vec3<f64>,

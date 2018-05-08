@@ -6,6 +6,7 @@ use raytracer::Ray;
 use light::Light;
 
 pub struct Object<'a> {
+#[derive(Clone, Copy)]
     pub shape: Shape,
     pub mat: &'a Material,
 }

@@ -2,7 +2,7 @@ use na::{Vector3 as Vec3, Rotation3 as Rot3, Unit};
 
 use num::traits::Zero;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Camera {
     /// Camera eye position
     pub eye: Vec3<f64>,

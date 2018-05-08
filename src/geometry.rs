@@ -3,7 +3,7 @@ use raytracer::Ray;
 use num::traits::Zero;
 use std::f64::INFINITY;
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum Shape {
     Sphere {
         radius: f64,
