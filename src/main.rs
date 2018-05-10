@@ -2,6 +2,7 @@ extern crate sdl2;
 extern crate nalgebra as na;
 extern crate rand;
 extern crate num;
+extern crate num_cpus;
 
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::event::Event;
@@ -35,6 +36,7 @@ use object::{new_sphere, new_box, Object, shape_to_obect_vector};
 fn main() {
     let context = sdl2::init().unwrap();
     let video = context.video().unwrap();
+    println!("Num of cpus: {}", num_cpus::get());
     let window = video.window("demo window", WIDTH, HEIGHT)
         .position_centered()
         .opengl()
