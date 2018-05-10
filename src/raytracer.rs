@@ -1,12 +1,12 @@
+extern crate num_cpus;
+extern crate crossbeam_utils;
+
 use na::Vector3 as Vec3;
 use std::f64::INFINITY;
 use camera::Camera;
 use light::Light;
 use object::Object;
 use std::sync::Arc;
-
-extern crate num_cpus;
-extern crate crossbeam_utils;
 
 pub struct Ray {
     pub dir: Vec3<f64>,
