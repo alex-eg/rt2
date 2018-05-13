@@ -1,4 +1,3 @@
-extern crate num_cpus;
 extern crate crossbeam_utils;
 
 use camera::Camera;
@@ -6,6 +5,8 @@ use light::Light;
 use object::Object;
 use std::sync::Arc;
 use na::Vector3 as Vec3;
+use num_cpus;
+
 use std::f64::INFINITY;
 
 pub struct Ray {
