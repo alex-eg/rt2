@@ -1,6 +1,5 @@
 extern crate sdl2;
 extern crate nalgebra as na;
-extern crate rand;
 extern crate num;
 extern crate num_cpus;
 
