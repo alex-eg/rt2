@@ -16,8 +16,8 @@ use std::time::Duration;
 const WIDTH: u32 = 800;
 const HEIGHT: u32 = 600;
 
-const CAM_WIDTH: u32 = 160;
-const CAM_HEIGHT: u32 = 120;
+const CAM_WIDTH: u32 = 320;
+const CAM_HEIGHT: u32 = 240;
 
 mod raytracer;
 mod camera;
