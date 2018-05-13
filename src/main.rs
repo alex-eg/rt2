@@ -8,10 +8,11 @@ use sdl2::pixels::PixelFormatEnum;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::render::TextureAccess;
-use std::{thread};
-use std::time::Duration;
 
 use na::Vector3 as Vec3;
+
+use std::thread;
+use std::time::Duration;
 
 const WIDTH: u32 = 800;
 const HEIGHT: u32 = 600;
