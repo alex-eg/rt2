@@ -2,6 +2,7 @@ extern crate sdl2;
 extern crate nalgebra as na;
 extern crate num;
 extern crate num_cpus;
+extern crate scoped_threadpool;
 
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::event::Event;
@@ -25,6 +26,7 @@ mod geometry;
 mod material;
 mod light;
 mod object;
+mod surface;
 
 use raytracer::march;
 use camera::CamBuilder;
@@ -186,7 +188,7 @@ fn main() {
         }
         let updated = march(&camera, &objects, &lights);
         for i in 0..updated.len() {
-            pixels[i] = (updated[i] * 255.) as u8;
+            pixels[i] = updated[i];
         }
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
         canvas.clear();
