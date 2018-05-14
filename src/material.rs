@@ -30,9 +30,8 @@ fn clamp(f: Vec3<f64>) -> Vec3<f64> {
     h
 }
 
-// Shadows are todo!
 impl Material {
-    pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>, lights: &Vec<Box<Light>>)
+    pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>, lights: &[Box<Light>])
                          -> Vec3<f64> {
         let mul = |l: &Vec3<f64>, r: &Vec3<f64>| -> Vec3<f64> {
             Vec3::new(l.x * r.x, l.y * r.y, l.z * r.z)

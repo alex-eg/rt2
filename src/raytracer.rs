@@ -14,7 +14,7 @@ pub struct Ray {
     pub origin: Vec3<f64>
 }
 
-pub fn march (cam: &Camera, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>)
+pub fn march (cam: &Camera, objects: &[Box<Object>], lights: &[Box<Light>])
               -> Vec<u8> {
 
     let mut pool = Pool::new(num_cpus::get() as u32);
@@ -23,15 +23,15 @@ pub fn march (cam: &Camera, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>
     pool.scoped(|scope| {
         for chunk in surf.divide(32, 32) {
             scope.execute(move || {
-                process_part(cam, objects, lights, chunk);
+                process_part(cam, objects, lights, &chunk);
             });
         }
     });
     surf.pixels
 }
 
-fn process_part(cam: &Camera, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>,
-                chunk: Division) {
+fn process_part(cam: &Camera, objects: &[Box<Object>], lights: &[Box<Light>],
+                chunk: &Division) {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
     let angle = cam.fov.to_radians().tan();
     let inv_width = 1. / cam.width as f64;
@@ -61,15 +61,15 @@ fn process_part(cam: &Camera, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light
     }
 }
 
-fn trace(ray: &Ray, objects: &Vec<Box<Object>>, lights: &Vec<Box<Light>>) -> Vec3<f64> {
+fn trace(ray: &Ray, objects: &[Box<Object>], lights: &[Box<Light>]) -> Vec3<f64> {
     let mut tnear = INFINITY;
-    for i in 0..objects.len() {
-        let (mut t0, t1) = objects[i].shape.intersect(ray);
+    for obj in objects {
+        let (mut t0, t1) = obj.shape.intersect(ray);
         if t0 < 0. { t0 = t1 };
         if t0 < tnear {
             tnear = t0;
-            let nhit = objects[i].shape.get_normal(ray, tnear);
-            return objects[i].compute_color(ray, tnear, nhit, lights);
+            let nhit = obj.shape.get_normal(ray, tnear);
+            return obj.compute_color(ray, tnear, nhit, lights);
         }
     }
     Vec3::new(0., 0., 0.)
