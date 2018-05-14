@@ -187,9 +187,7 @@ fn main() {
             }
         }
         let updated = march(&camera, &objects, &lights);
-        for i in 0..updated.len() {
-            pixels[i] = updated[i];
-        }
+        pixels[..updated.len()].clone_from_slice(&updated[..]);
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
         canvas.clear();
         canvas.copy(&texture, None, None).unwrap();

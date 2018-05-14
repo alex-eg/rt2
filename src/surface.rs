@@ -22,12 +22,11 @@ impl Surface {
     pub fn new(w: u32, h: u32) -> Surface {
         let depth = 3;
         let cap = (h * w * depth) as usize;
-        let mut p = Vec::with_capacity(cap);
+        let mut pixels = Vec::with_capacity(cap);
         unsafe {
-            p.set_len(cap);
+            pixels.set_len(cap);
         }
-        let surf = Surface { w: w, h: h, pixels: p };
-        surf
+        Surface { w, h, pixels }
     }
 
     /// dw -- division quadrant width
@@ -51,7 +50,7 @@ impl Surface {
                     self.h - dh * (h_num - 1)
                 } else { dh };
 
-                divisions.insert(Division { x0: i * dw, y0: j * dh, w: w, h: h, surf: self });
+                divisions.insert(Division { x0: i * dw, y0: j * dh, w, h, surf: self });
             }
         }
         divisions
