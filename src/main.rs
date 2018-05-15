@@ -23,7 +23,6 @@ use object::{new_sphere, new_box, Object, shape_to_obect_vector};
 use raytracer::march;
 
 use na::Vector3 as Vec3;
-
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::PixelFormatEnum;
@@ -41,6 +40,9 @@ const HEIGHT: u32 = 600;
 fn main() {
     let context = sdl2::init().unwrap();
     let video = context.video().unwrap();
+    let ttf = sdl2::ttf::init().unwrap();
+    let font = ttf.load_font("/usr/share/fonts/droid/DroidSansMono.ttf", 13).unwrap();
+
     println!("Num of cpus: {}", num_cpus::get());
     let window = video.window("demo window", WIDTH, HEIGHT)
         .position_centered()
@@ -197,6 +199,11 @@ fn main() {
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
         canvas.clear();
         canvas.copy(&texture, None, None).unwrap();
+        let white = sdl2::pixels::Color{ r: 255, g: 255, b: 255, a: 255 };
+        let f_surf = font.render(&format!("FPS: {:.2}", fps.fps())).solid(white).unwrap();
+        let f_rect = f_surf.rect();
+        let f_tex = tex_creator.create_texture_from_surface(&f_surf).unwrap();
+        canvas.copy(&f_tex, None, f_rect).unwrap();
         canvas.present();
         thread::sleep(Duration::from_millis(10));
     }

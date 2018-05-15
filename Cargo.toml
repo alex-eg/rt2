@@ -6,8 +6,12 @@ authors = ["alex-eg <alexey.e.egorov@gmail.com>"]
 [dependencies]
 num_cpus = "1.8.0"
 num = "0.1.40"
-sdl2 = "0.30.0"
 gl = "0.6.3"
 nalgebra = "0.13.1"
 scoped_threadpool = "0.1.*"
 time = "0.1.40"
+
+[dependencies.sdl2]
+version = "0.31.0"
+default-features = false
+features = ["ttf"]
