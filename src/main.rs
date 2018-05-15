@@ -1,39 +1,39 @@
-extern crate sdl2;
 extern crate nalgebra as na;
 extern crate num;
 extern crate num_cpus;
 extern crate scoped_threadpool;
+extern crate sdl2;
 
-use sdl2::pixels::PixelFormatEnum;
-use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
-use sdl2::render::TextureAccess;
+mod camera;
+mod geometry;
+mod light;
+mod material;
+mod object;
+mod raytracer;
+mod surface;
+
+use camera::CamBuilder;
+use geometry::{BoxBuilder};
+use light::Light;
+use material::Material;
+use object::{new_sphere, new_box, Object, shape_to_obect_vector};
+use raytracer::march;
 
 use na::Vector3 as Vec3;
 
-use std::thread;
-use std::time::Duration;
+use sdl2::event::Event;
+use sdl2::keyboard::Keycode;
+use sdl2::pixels::PixelFormatEnum;
+use sdl2::render::TextureAccess;
 
-const WIDTH: u32 = 800;
-const HEIGHT: u32 = 600;
+use std::time::Duration;
+use std::thread;
 
 const CAM_WIDTH: u32 = 320;
 const CAM_HEIGHT: u32 = 240;
 
-mod raytracer;
-mod camera;
-mod geometry;
-mod material;
-mod light;
-mod object;
-mod surface;
-
-use raytracer::march;
-use camera::CamBuilder;
-use geometry::{BoxBuilder};
-use material::Material;
-use light::Light;
-use object::{new_sphere, new_box, Object, shape_to_obect_vector};
+const WIDTH: u32 = 800;
+const HEIGHT: u32 = 600;
 
 fn main() {
     let context = sdl2::init().unwrap();
