@@ -3,8 +3,10 @@ extern crate num;
 extern crate num_cpus;
 extern crate scoped_threadpool;
 extern crate sdl2;
+extern crate time;
 
 mod camera;
+mod fps_counter;
 mod geometry;
 mod light;
 mod material;
@@ -13,6 +15,7 @@ mod raytracer;
 mod surface;
 
 use camera::CamBuilder;
+use fps_counter::FpsCounter;
 use geometry::{BoxBuilder};
 use light::Light;
 use material::Material;
@@ -134,6 +137,8 @@ fn main() {
 
     let mut pump = context.event_pump().unwrap();
 
+    let mut fps = FpsCounter::new(1000);
+    fps.restart();
     'running: loop {
         for event in pump.poll_iter() {
             match event {
@@ -186,6 +191,7 @@ fn main() {
                 _ => ()
             }
         }
+        fps.update();
         let updated = march(&camera, &objects, &lights);
         pixels[..updated.len()].clone_from_slice(&updated[..]);
         let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
