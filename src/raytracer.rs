@@ -63,14 +63,19 @@ fn process_part(cam: &Camera, objects: &[Box<Object>], lights: &[Box<Light>],
 
 fn trace(ray: &Ray, objects: &[Box<Object>], lights: &[Box<Light>]) -> Vec3<f64> {
     let mut tnear = INFINITY;
+    let mut hit_obj: &Object = &objects[0];
     for obj in objects {
         let (mut t0, t1) = obj.shape.intersect(ray);
         if t0 < 0. { t0 = t1 };
         if t0 < tnear {
             tnear = t0;
-            let nhit = obj.shape.get_normal(ray, tnear);
-            return obj.compute_color(ray, tnear, nhit, lights);
+            hit_obj = &obj;
         }
     }
-    Vec3::new(0., 0., 0.)
+    if tnear != INFINITY {
+        let nhit = hit_obj.shape.get_normal(ray, tnear);
+        hit_obj.compute_color(ray, tnear, nhit, lights)
+    } else {
+        Vec3::new(0., 0., 0.)
+    }
 }
