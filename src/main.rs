@@ -70,8 +70,6 @@ fn main() {
                                   emission: Vec3::new(0., 0., 0.),
                                   shininess: 10.0  };
 
-    let green = Material::Plain{ color: Vec3::new(0., 1., 0.) };
-
     let mut camera = CamBuilder::new()
         .eye(Vec3::new(0., 0., 60.))
         .center(Vec3::new(0., 0., 59.))
@@ -90,9 +88,9 @@ fn main() {
     let sphere4 = new_sphere(Vec3::new(20., -20., -20.),
                              5., red);
     let sphere5 = new_sphere(Vec3::new(-20., 20., 20.),
-                             5., green);
+                             5., blue);
     let sphere6 = new_sphere(Vec3::new(-20., 20., -20.),
-                             5., green);
+                             5., blue);
     let sphere7 = new_sphere(Vec3::new(-20., -20., 20.),
                              5., red);
     let sphere8 = new_sphere(Vec3::new(-20., -20., -20.),
