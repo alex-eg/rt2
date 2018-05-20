@@ -12,6 +12,7 @@ matrix:
 sudo: false
 addons:
   apt:
+    update: true
     packages:
      - libgl1-mesa-dev
      - libgles2-mesa-dev
