@@ -2,7 +2,7 @@ Rust real-time raytracer
 ========================
 [![Build Status](https://travis-ci.org/alex-eg/rt2.svg?branch=master)](https://travis-ci.org/alex-eg/rt2)
 
-![Fancy!](https://raw.githubusercontent.com/taptap/rt2/devel/doc/images/rt.png)
+![Fancy!](https://raw.githubusercontent.com/taptap/rt2/master/doc/images/rt.png)
 
 Build and run
 -------------
