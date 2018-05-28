@@ -70,6 +70,12 @@ fn main() {
                                   emission: Vec3::new(0., 0., 0.),
                                   shininess: 10.0  };
 
+    let green = Material::Lambert{ ambient: Vec3::new(0.1, 0.1, 0.1),
+                                   diffuse: Vec3::new(0., 1., 0.3),
+                                   specular: Vec3::new(1., 1., 1.),
+                                   emission: Vec3::new(0., 0., 0.),
+                                   shininess: 10.0  };
+
     let mut camera = CamBuilder::new()
         .eye(Vec3::new(0., 0., 60.))
         .center(Vec3::new(0., 0., 59.))
