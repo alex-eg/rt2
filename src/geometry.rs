@@ -13,6 +13,12 @@ pub enum Shape {
     Box {
         vmin: Vec3<f64>,
         vmax: Vec3<f64>,
+    },
+
+    Triangle {
+        a: Vec3<f64>,
+        b: Vec3<f64>,
+        c: Vec3<f64>
     }
 }
 
@@ -42,6 +48,18 @@ impl Shape {
                     nhit = -nhit;
                 }
                 nhit
+            }
+
+            Shape::Triangle { a, b, .. } => {
+                let t = ray.origin + ray.dir * tnear;
+                let edge_0 = t - a;
+                let edge_1 = t - b;
+                let mut nhit = edge_1.cross(&edge_0).normalize();
+                if ray.dir.dot(&nhit) > 0. {
+                    nhit = -nhit;
+                }
+                nhit
+
             }
         }
     }
@@ -102,6 +120,31 @@ impl Shape {
                 t0 = tca - thc;
                 t1 = tca + thc;
                 (t0, t1)
+            }
+
+            Shape::Triangle { a, b, c } => {
+                let edge_0 = b - a;
+                let edge_1 = c - a;
+                let h = ray.dir.cross(&edge_1);
+
+                let d = edge_0.dot(&h);
+                if d  == 0. { return (t0, t1); }
+
+                let f = 1. / d;
+                let s = ray.origin - a;
+                let u = f * s.dot(&h);
+                if u < 0. || u > 1. { return (t0, t1); }
+
+                let q = s.cross(&edge_0);
+                let v = f * ray.dir.dot(&q);
+                if v < 0. || v + u > 1. { return (t0, t1); }
+
+                let t = f * edge_1.dot(&q);
+                if t > 0. {
+                    return (t, t1);
+                } else {
+                    return (t0, t1);
+                }
             }
         }
     }

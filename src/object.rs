@@ -33,6 +33,13 @@ pub fn new_box(vmin: Vec3<f64>, vmax: Vec3<f64>, mat: Material) -> Object {
     }
 }
 
+pub fn new_triangle(a: Vec3<f64>, b: Vec3<f64>, c: Vec3<f64>, mat: Material) -> Object {
+    Object {
+        shape: Shape::Triangle { a, b, c },
+        mat: mat
+    }
+}
+
 pub fn shape_to_obect_vector(shapes: &Vec<Box<Shape>>, mat: Material) -> Vec<Box<Object>> {
     let mut obj_vec = Vec::new();
     for s in shapes {
