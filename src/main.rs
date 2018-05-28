@@ -19,7 +19,7 @@ use fps_counter::FpsCounter;
 use geometry::{BoxBuilder};
 use light::Light;
 use material::Material;
-use object::{new_sphere, new_box, Object, shape_to_obect_vector};
+use object::{new_sphere, new_box, new_triangle, Object, shape_to_obect_vector};
 use raytracer::march;
 
 use na::Vector3 as Vec3;
@@ -102,6 +102,10 @@ fn main() {
     let sphere8 = new_sphere(Vec3::new(-20., -20., -20.),
                              5., red);
 
+    let triangle = new_triangle(Vec3::new(0., -20., 0.),
+                                Vec3::new(-20., 20., 0.),
+                                Vec3::new(20., 20., 0.),
+                                green);
 
     let box1 = new_box(Vec3::new(5., 5., 5.),
                        Vec3::new(10., 10., 10.),
@@ -125,6 +129,7 @@ fn main() {
         Box::new(sphere7),
         Box::new(sphere8),
         Box::new(box1),
+        Box::new(triangle),
     ];
 
     let small_tree_shapes = shape_to_obect_vector(&small_tree, blue);
