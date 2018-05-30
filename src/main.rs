@@ -53,8 +53,8 @@ fn main() {
     let mut canvas = window.into_canvas().build().unwrap();
     let tex_creator = canvas.texture_creator();
     let mut texture = tex_creator.create_texture(PixelFormatEnum::RGB24,
-                                              TextureAccess::Static,
-                                              CAM_WIDTH, CAM_HEIGHT).unwrap();
+                                                 TextureAccess::Static,
+                                                 CAM_WIDTH, CAM_HEIGHT).unwrap();
     const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
