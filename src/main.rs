@@ -25,6 +25,7 @@ use raytracer::march;
 use na::Vector3 as Vec3;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
+use sdl2::mouse::MouseButton;
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::render::TextureAccess;
 
@@ -148,14 +149,20 @@ fn main() {
 
     let mut pump = context.event_pump().unwrap();
 
+    let mut mouse_captured = false;
+
     let mut fps = FpsCounter::new(1000);
     fps.restart();
     'running: loop {
         for event in pump.poll_iter() {
             match event {
-                Event::Quit {..}
-                | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+                Event::Quit {..}  => {
                     break 'running
+                },
+
+                Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+                    mouse_captured = false;
+                    context.mouse().set_relative_mouse_mode(false);
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::Q), .. } => {
@@ -164,22 +171,6 @@ fn main() {
 
                 Event::KeyDown { keycode: Some(Keycode::E), .. } => {
                     camera.roll(1.)
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::Up), .. } => {
-                    camera.pitch(1.)
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::Down), .. } => {
-                    camera.pitch(-1.)
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::Right), .. } => {
-                    camera.yaw(-1.)
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::Left), .. } => {
-                    camera.yaw(1.)
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::W), .. } => {
@@ -198,7 +189,19 @@ fn main() {
                     camera.mov_side(2.);
                 },
 
+                // Mouse
 
+                Event::MouseMotion { xrel, yrel, .. } => {
+                    if mouse_captured {
+                        camera.pitch(yrel as f64 / 3.);
+                        camera.yaw(xrel as f64 / 3.);
+                    }
+                },
+
+                Event::MouseButtonDown { mouse_btn: MouseButton::Left, .. } => {
+                    mouse_captured = true;
+                    context.mouse().set_relative_mouse_mode(true);
+                },
                 _ => ()
             }
         }
