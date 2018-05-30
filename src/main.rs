@@ -183,19 +183,19 @@ fn main() {
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::W), .. } => {
-                    camera.mov_fwd(1.);
+                    camera.mov_fwd(2.);
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::S), .. } => {
-                    camera.mov_fwd(-1.);
+                    camera.mov_fwd(-2.);
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::A), .. } => {
-                    camera.mov_side(-1.);
+                    camera.mov_side(-2.);
                 },
 
                 Event::KeyDown { keycode: Some(Keycode::D), .. } => {
-                    camera.mov_side(1.);
+                    camera.mov_side(2.);
                 },
 
 
