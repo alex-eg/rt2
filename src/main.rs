@@ -13,6 +13,7 @@ mod material;
 mod object;
 mod raytracer;
 mod surface;
+mod input;
 
 use camera::CamBuilder;
 use fps_counter::FpsCounter;
@@ -21,11 +22,10 @@ use light::Light;
 use material::Material;
 use object::{new_sphere, new_box, new_triangle, Object, shape_to_obect_vector};
 use raytracer::march;
+use input::InputHandler;
 
 use na::Vector3 as Vec3;
 use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
-use sdl2::mouse::MouseButton;
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::render::TextureAccess;
 
@@ -149,10 +149,9 @@ fn main() {
 
     let mut pump = context.event_pump().unwrap();
 
-    let mut mouse_captured = false;
-
     let mut fps = FpsCounter::new(1000);
     fps.restart();
+    let mut input_handler = InputHandler::new();
     'running: loop {
         for event in pump.poll_iter() {
             match event {
@@ -160,51 +159,12 @@ fn main() {
                     break 'running
                 },
 
-                Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
-                    mouse_captured = false;
-                    context.mouse().set_relative_mouse_mode(false);
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::Q), .. } => {
-                    camera.roll(-1.)
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::E), .. } => {
-                    camera.roll(1.)
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::W), .. } => {
-                    camera.mov_fwd(2.);
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::S), .. } => {
-                    camera.mov_fwd(-2.);
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::A), .. } => {
-                    camera.mov_side(-2.);
-                },
-
-                Event::KeyDown { keycode: Some(Keycode::D), .. } => {
-                    camera.mov_side(2.);
-                },
-
-                // Mouse
-
-                Event::MouseMotion { xrel, yrel, .. } => {
-                    if mouse_captured {
-                        camera.pitch(yrel as f64 / 3.);
-                        camera.yaw(xrel as f64 / 3.);
-                    }
-                },
-
-                Event::MouseButtonDown { mouse_btn: MouseButton::Left, .. } => {
-                    mouse_captured = true;
-                    context.mouse().set_relative_mouse_mode(true);
-                },
-                _ => ()
+                _ => {
+                    input_handler.process(event, &mut camera, &context)
+                }
             }
         }
+        input_handler.update(&mut camera);
         fps.update();
         let updated = march(&camera, &objects, &lights);
         pixels[..updated.len()].clone_from_slice(&updated[..]);
