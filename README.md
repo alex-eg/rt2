@@ -19,9 +19,9 @@ Runnig without `--release` argument produces debug binaries, which are much slow
 
 Controls
 --------
-
+* LMB - lock mouse
+* Escape - release mouse
+* Mouse - look around
 * Q - roll CCW
 * E - roll CW
-* Right/Left arrow - yaw
-* Up/Down arrow - pitch
-* WASD - move camera
+* WASD - move
