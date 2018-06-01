@@ -24,6 +24,7 @@ use material::Material;
 use object::{new_sphere, new_box, new_triangle, Object, shape_to_obect_vector};
 use raytracer::march;
 use input::InputHandler;
+use resource::ResourceLoader;
 
 use na::Vector3 as Vec3;
 use sdl2::event::Event;
@@ -42,9 +43,8 @@ const HEIGHT: u32 = 600;
 fn main() {
     let context = sdl2::init().unwrap();
     let video = context.video().unwrap();
-    let ttf = sdl2::ttf::init().unwrap();
-    let font = ttf.load_font("/usr/share/fonts/droid/DroidSansMono.ttf", 13).unwrap();
-
+    let res = ResourceLoader::new();
+    let font = res.load_font("~res:fonts/courier_code.ttf", 16);
     println!("Num of cpus: {}", num_cpus::get());
     let window = video.window("demo window", WIDTH, HEIGHT)
         .position_centered()
