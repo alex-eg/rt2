@@ -14,6 +14,7 @@ mod object;
 mod raytracer;
 mod surface;
 mod input;
+mod resource;
 
 use camera::CamBuilder;
 use fps_counter::FpsCounter;
