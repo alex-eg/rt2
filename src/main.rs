@@ -15,6 +15,7 @@ mod raytracer;
 mod surface;
 mod input;
 mod resource;
+mod animation;
 
 use camera::CamBuilder;
 use fps_counter::FpsCounter;
@@ -24,6 +25,7 @@ use object::{new_sphere, new_box, new_triangle, new_square, Object, BoxBuilder};
 use raytracer::march;
 use input::InputHandler;
 use resource::ResourceLoader;
+use animation::Animation;
 
 use na::Vector3 as Vec3;
 use sdl2::event::Event;
@@ -59,23 +61,23 @@ fn main() {
     const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
-    let red = Material::Lambert{ ambient: Vec3::new(0.1, 0.1, 0.1),
-                                 diffuse: Vec3::new(1., 0., 0.),
-                                 specular: Vec3::new(1., 1., 1.),
-                                 emission: Vec3::new(0., 0., 0.),
-                                 shininess: 30.0 };
-
-    let blue = Material::Lambert{ ambient: Vec3::new(0.1, 0.1, 0.1),
-                                  diffuse: Vec3::new(0., 0.3, 1.),
+    let red = Material::Lambert { ambient: Vec3::new(0.1, 0.1, 0.1),
+                                  diffuse: Vec3::new(1., 0., 0.),
                                   specular: Vec3::new(1., 1., 1.),
                                   emission: Vec3::new(0., 0., 0.),
-                                  shininess: 10.0  };
+                                  shininess: 30.0 };
 
-    let green = Material::Lambert{ ambient: Vec3::new(0.1, 0.1, 0.1),
-                                   diffuse: Vec3::new(0., 1., 0.3),
+    let blue = Material::Lambert { ambient: Vec3::new(0.1, 0.1, 0.1),
+                                   diffuse: Vec3::new(0., 0.3, 1.),
                                    specular: Vec3::new(1., 1., 1.),
                                    emission: Vec3::new(0., 0., 0.),
-                                   shininess: 10.0  };
+                                   shininess: 10.0 };
+
+    let green = Material::Lambert { ambient: Vec3::new(0.1, 0.1, 0.1),
+                                    diffuse: Vec3::new(0., 1., 0.3),
+                                    specular: Vec3::new(1., 1., 1.),
+                                    emission: Vec3::new(0., 0., 0.),
+                                    shininess: 10.0 };
 
     let mut camera = CamBuilder::new()
         .eye(Vec3::new(0., 0., 60.))
@@ -132,9 +134,15 @@ fn main() {
         new_square("square", Vec3::new(0., 25., 0.), 128, red),
     ];
 
-    let light1 = Light { pos: Vec3::new(0., -80., 0.),
+    let light1 = Light { pos: Vec3::new(0., -60., 0.),
                          color: Vec3::new(1., 1., 1.) };
-    let lights: Vec<Light> = vec![
+    let mut a = Animation::new(&light1, vec![
+        Vec3::new(15., 0., 0.),
+        Vec3::new(0., 0., 15.),
+        Vec3::new(-15., 0., 0.),
+    ]);
+
+    let mut lights: Vec<Light> = vec![
         light1,
     ];
 
@@ -162,7 +170,8 @@ fn main() {
         }
         input_handler.update(&mut camera);
         fps.update();
-        if input_handler.dirty == true || first {
+        a.update(&mut lights[0]);
+        if input_handler.dirty == true || first || a.dirty {
             let updated = march(&camera, &objects, &lights);
             pixels[..updated.len()].clone_from_slice(&updated[..]);
             let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
