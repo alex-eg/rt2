@@ -18,10 +18,9 @@ mod resource;
 
 use camera::CamBuilder;
 use fps_counter::FpsCounter;
-use geometry::{BoxBuilder};
 use light::Light;
 use material::Material;
-use object::{new_sphere, new_box, new_triangle, Object, shape_to_obect_vector};
+use object::{new_sphere, new_box, new_triangle, Object, BoxBuilder};
 use raytracer::march;
 use input::InputHandler;
 use resource::ResourceLoader;
@@ -119,9 +118,9 @@ fn main() {
         .add(10, 18, 1, 1)
         .add(10, 17, 1, 1)
         .add(10, 16, 1, 1)
-        .build();
+        .build(green);
 
-    let mut objects: Vec<Object> = vec![
+    let objects: Vec<Object> = vec![
         sphere1,
         sphere2,
         sphere3,
@@ -132,12 +131,8 @@ fn main() {
         sphere8,
         box1,
         triangle,
+        small_tree,
     ];
-
-    let small_tree_shapes = shape_to_obect_vector(&small_tree, blue);
-    for b in small_tree_shapes {
-        objects.push(b);
-    }
 
     let light1 = Light { pos: Vec3::new(0., 0., 5.),
                          color: Vec3::new(1., 1., 1.) };

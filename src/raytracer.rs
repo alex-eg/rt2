@@ -1,6 +1,7 @@
 use camera::Camera;
 use light::Light;
 use object::Object;
+use geometry::Shape;
 use surface::{Division, Surface};
 
 use na::Vector3 as Vec3;
@@ -64,16 +65,20 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light],
 fn trace(ray: &Ray, objects: &[Object], lights: &[Light]) -> Vec3<f64> {
     let mut tnear = INFINITY;
     let mut hit_obj: &Object = &objects[0];
+    let mut hit_shape: &Shape = &hit_obj.shapes[0];
     for obj in objects {
-        let (mut t0, t1) = obj.shape.intersect(ray);
-        if t0 < 0. { t0 = t1 };
-        if t0 < tnear {
-            tnear = t0;
-            hit_obj = &obj;
+        for shape in obj.shapes.iter() {
+            let (mut t0, t1) = shape.intersect(ray);
+            if t0 < 0. { t0 = t1 };
+            if t0 < tnear {
+                tnear = t0;
+                hit_shape = &shape;
+                hit_obj = &obj;
+            }
         }
     }
     if tnear != INFINITY {
-        let nhit = hit_obj.shape.get_normal(ray, tnear);
+        let nhit = hit_shape.get_normal(ray, tnear);
         hit_obj.compute_color(ray, tnear, nhit, lights)
     } else {
         Vec3::new(0., 0., 0.)
