@@ -121,17 +121,17 @@ fn main() {
         .add(10, 16, 1, 1)
         .build();
 
-    let mut objects: Vec<Box<Object>> = vec![
-        Box::new(sphere1),
-        Box::new(sphere2),
-        Box::new(sphere3),
-        Box::new(sphere4),
-        Box::new(sphere5),
-        Box::new(sphere6),
-        Box::new(sphere7),
-        Box::new(sphere8),
-        Box::new(box1),
-        Box::new(triangle),
+    let mut objects: Vec<Object> = vec![
+        sphere1,
+        sphere2,
+        sphere3,
+        sphere4,
+        sphere5,
+        sphere6,
+        sphere7,
+        sphere8,
+        box1,
+        triangle,
     ];
 
     let small_tree_shapes = shape_to_obect_vector(&small_tree, blue);
@@ -141,8 +141,8 @@ fn main() {
 
     let light1 = Light { pos: Vec3::new(0., 0., 5.),
                          color: Vec3::new(1., 1., 1.) };
-    let lights: Vec<Box<Light>> = vec![
-        Box::new(light1),
+    let lights: Vec<Light> = vec![
+        light1,
     ];
 
     canvas.clear();

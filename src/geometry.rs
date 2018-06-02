@@ -151,7 +151,7 @@ impl Shape {
 }
 
 pub struct BoxBuilder {
-    boxes: Vec<Box<Shape>>
+    boxes: Vec<Shape>
 }
 
 impl BoxBuilder {
@@ -161,20 +161,20 @@ impl BoxBuilder {
 
     /// Adds a square box to vector
     pub fn add(mut self, x: i32, y: i32, z: i32, size: i32)
-               -> BoxBuilder{
+               -> BoxBuilder {
         assert!(size > 0);
-        let new_box = Box::new(Shape::Box
-                               { vmin: Vec3::new(x as f64,
-                                            y as f64,
-                                            z as f64),
-                                 vmax: Vec3::new((x + size) as f64,
-                                             (y + size) as f64,
-                                             (z + size) as f64) });
+        let new_box = Shape::Box {
+            vmin: Vec3::new(x as f64,
+                            y as f64,
+                            z as f64),
+            vmax: Vec3::new((x + size) as f64,
+                            (y + size) as f64,
+                            (z + size) as f64) };
         self.boxes.push(new_box);
         self
     }
 
-    pub fn build(self) -> Vec<Box<Shape>> {
+    pub fn build(self) -> Vec<Shape> {
         self.boxes
     }
 }

@@ -14,7 +14,7 @@ pub struct Ray {
     pub origin: Vec3<f64>
 }
 
-pub fn march (cam: &Camera, objects: &[Box<Object>], lights: &[Box<Light>])
+pub fn march (cam: &Camera, objects: &[Object], lights: &[Light])
               -> Vec<u8> {
 
     let mut pool = Pool::new(num_cpus::get() as u32);
@@ -30,7 +30,7 @@ pub fn march (cam: &Camera, objects: &[Box<Object>], lights: &[Box<Light>])
     surf.pixels
 }
 
-fn process_part(cam: &Camera, objects: &[Box<Object>], lights: &[Box<Light>],
+fn process_part(cam: &Camera, objects: &[Object], lights: &[Light],
                 chunk: &Division) {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
     let angle = cam.fov.to_radians().tan();
@@ -61,7 +61,7 @@ fn process_part(cam: &Camera, objects: &[Box<Object>], lights: &[Box<Light>],
     }
 }
 
-fn trace(ray: &Ray, objects: &[Box<Object>], lights: &[Box<Light>]) -> Vec3<f64> {
+fn trace(ray: &Ray, objects: &[Object], lights: &[Light]) -> Vec3<f64> {
     let mut tnear = INFINITY;
     let mut hit_obj: &Object = &objects[0];
     for obj in objects {

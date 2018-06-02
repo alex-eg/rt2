@@ -13,7 +13,7 @@ pub struct Object {
 
 impl Object {
     pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>,
-                         lights: &[Box<Light>]) -> Vec3<f64> {
+                         lights: &[Light]) -> Vec3<f64> {
         self.mat.compute_color(ray, tnear, nhit, lights)
     }
 }
@@ -40,12 +40,10 @@ pub fn new_triangle(a: Vec3<f64>, b: Vec3<f64>, c: Vec3<f64>, mat: Material) -> 
     }
 }
 
-pub fn shape_to_obect_vector(shapes: &Vec<Box<Shape>>, mat: Material) -> Vec<Box<Object>> {
+pub fn shape_to_obect_vector(shapes: &[Shape], mat: Material) -> Vec<Object> {
     let mut obj_vec = Vec::new();
-    for s in shapes {
-        let obj_box = Box::new(Object { shape: **s,
-                                        mat: mat, });
-        obj_vec.push(obj_box);
+    for shape in shapes {
+        obj_vec.push(Object { shape: *shape, mat });
     }
     obj_vec
 }
