@@ -62,25 +62,43 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light],
     }
 }
 
+fn hit(ray: &Ray, shape: &Shape) -> f64 {
+    let (t0, t1) = shape.intersect(ray);
+    if t0 < 0. { t1 } else { t0 }
+}
+
 fn trace(ray: &Ray, objects: &[Object], lights: &[Light]) -> Vec3<f64> {
     let mut tnear = INFINITY;
     let mut hit_obj: &Object = &objects[0];
     let mut hit_shape: &Shape = &hit_obj.shapes[0];
     for obj in objects {
         for shape in obj.shapes.iter() {
-            let (mut t0, t1) = shape.intersect(ray);
-            if t0 < 0. { t0 = t1 };
-            if t0 < tnear {
-                tnear = t0;
+            let t = hit(ray, shape);
+            if t < tnear {
+                tnear = t;
                 hit_shape = &shape;
                 hit_obj = &obj;
             }
         }
     }
+    let mut color = Vec3::new(0., 0., 0.);
     if tnear != INFINITY {
+        color = Vec3::new(0.001, 0., 0.);
         let nhit = hit_shape.get_normal(ray, tnear);
-        hit_obj.compute_color(ray, tnear, nhit, lights)
-    } else {
-        Vec3::new(0., 0., 0.)
+        let phit = ray.origin + ray.dir * tnear;
+        'light: for light in lights {
+            for obj in objects {
+                for shape in obj.shapes.iter() {
+                    let shadow_ray = Ray {
+                        origin: phit + nhit * 0.001,
+                        dir: (light.pos - phit).normalize() };
+                    if hit(&shadow_ray, shape) != INFINITY {
+                        continue 'light;
+                    }
+                }
+            }
+            color += hit_obj.compute_color(ray, tnear, nhit, light);
+        }
     }
+    color
 }

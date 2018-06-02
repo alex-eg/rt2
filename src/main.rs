@@ -132,7 +132,7 @@ fn main() {
         new_square("square", Vec3::new(0., 25., 0.), 128, red),
     ];
 
-    let light1 = Light { pos: Vec3::new(0., -40., 0.),
+    let light1 = Light { pos: Vec3::new(0., -80., 0.),
                          color: Vec3::new(1., 1., 1.) };
     let lights: Vec<Light> = vec![
         light1,

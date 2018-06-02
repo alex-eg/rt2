@@ -31,7 +31,7 @@ fn clamp(f: Vec3<f64>) -> Vec3<f64> {
 }
 
 impl Material {
-    pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>, lights: &[Light])
+    pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>, light: &Light)
                          -> Vec3<f64> {
         let mul = |l: &Vec3<f64>, r: &Vec3<f64>| -> Vec3<f64> {
             Vec3::new(l.x * r.x, l.y * r.y, l.z * r.z)
@@ -42,18 +42,16 @@ impl Material {
                                 shininess } => {
                 let mut color: Vec3<f64> = Vec3::zero();
                 let phit = ray.origin + ray.dir * tnear;
-                for l in lights {
-                    let ldir = (l.pos - phit).normalize();
-                    let ndotl = nhit.dot(&ldir);
-                    let lambert = mul(&l.color, &diffuse) * max(ndotl, 0.0);
+                let ldir = (light.pos - phit).normalize();
+                let ndotl = nhit.dot(&ldir);
+                let lambert = mul(&light.color, &diffuse) * max(ndotl, 0.0);
 
-                    let halfv = (-ray.dir + ldir).normalize();
-                    let ndoth = nhit.dot(&halfv);
-                    let phong = mul(&l.color, &specular)
-                        * max(ndoth, 0.0).powf(shininess);
+                let halfv = (-ray.dir + ldir).normalize();
+                let ndoth = nhit.dot(&halfv);
+                let phong = mul(&light.color, &specular)
+                    * max(ndoth, 0.0).powf(shininess);
 
-                    color = color + lambert + phong;
-                }
+                color = color + lambert + phong;
                 clamp(color + ambient + emission)
             }
         }
