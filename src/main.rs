@@ -20,7 +20,7 @@ use camera::CamBuilder;
 use fps_counter::FpsCounter;
 use light::Light;
 use material::Material;
-use object::{new_sphere, new_box, new_triangle, Object, BoxBuilder};
+use object::{new_sphere, new_box, new_triangle, new_square, Object, BoxBuilder};
 use raytracer::march;
 use input::InputHandler;
 use resource::ResourceLoader;
@@ -36,8 +36,8 @@ use std::thread;
 const CAM_WIDTH: u32 = 320;
 const CAM_HEIGHT: u32 = 240;
 
-const WIDTH: u32 = 800;
-const HEIGHT: u32 = 600;
+const WIDTH: u32 = 1024;
+const HEIGHT: u32 = 768;
 
 fn main() {
     let context = sdl2::init().unwrap();
@@ -132,6 +132,7 @@ fn main() {
         box1,
         triangle,
         small_tree,
+        new_square(Vec3::new(0., 25., 0.), 128, red),
     ];
 
     let light1 = Light { pos: Vec3::new(0., 0., 5.),

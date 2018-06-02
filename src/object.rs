@@ -40,6 +40,20 @@ pub fn new_triangle(a: Vec3<f64>, b: Vec3<f64>, c: Vec3<f64>, mat: Material) -> 
     }
 }
 
+pub fn new_square(center: Vec3<f64>, size: u16, mat: Material) -> Object {
+    let s = size as f64 / 2.;
+    let a = Vec3::new(center.x - s, center.y, center.z - s);
+    let b = Vec3::new(center.x + s, center.y, center.z - s);
+    let c = Vec3::new(center.x + s, center.y, center.z + s);
+    let d = Vec3::new(center.x - s, center.y, center.z + s);
+    Object {
+        shapes: vec![Shape::Triangle { a, b, c },
+                     Shape::Triangle { a, b: c, c: d }],
+        mat,
+    }
+}
+
+
 pub struct BoxBuilder {
     boxes: Vec<Shape>
 }
