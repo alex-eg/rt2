@@ -149,7 +149,7 @@ fn main() {
     let mut fps = FpsCounter::new(1000);
     fps.restart();
     let mut input_handler = InputHandler::new();
-    let first = true;
+    let mut first = true;
     'running: loop {
         input_handler.clear();
         for event in pump.poll_iter() {
