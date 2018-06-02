@@ -149,7 +149,9 @@ fn main() {
     let mut fps = FpsCounter::new(1000);
     fps.restart();
     let mut input_handler = InputHandler::new();
+    let first = true;
     'running: loop {
+        input_handler.clear();
         for event in pump.poll_iter() {
             match event {
                 Event::Quit {..}  => {
@@ -163,9 +165,12 @@ fn main() {
         }
         input_handler.update(&mut camera);
         fps.update();
-        let updated = march(&camera, &objects, &lights);
-        pixels[..updated.len()].clone_from_slice(&updated[..]);
-        let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
+        if input_handler.dirty == true || first {
+            let updated = march(&camera, &objects, &lights);
+            pixels[..updated.len()].clone_from_slice(&updated[..]);
+            let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
+            first = false;
+        }
         canvas.clear();
         canvas.copy(&texture, None, None).unwrap();
         let white = sdl2::pixels::Color{ r: 255, g: 255, b: 255, a: 255 };

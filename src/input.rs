@@ -16,6 +16,7 @@ pub struct InputHandler {
 
     mouse_captured: bool,
     delta: f64,
+    pub dirty: bool,
 }
 
 impl InputHandler {
@@ -31,6 +32,7 @@ impl InputHandler {
 
             mouse_captured: false,
             delta: 1.0,
+            dirty: false,
         }
     }
 
@@ -91,6 +93,7 @@ impl InputHandler {
             // Mouse
             Event::MouseMotion { xrel, yrel, .. } => {
                 if self.mouse_captured {
+                    self.dirty = true;
                     camera.pitch(yrel as f64 / 3.);
                     camera.yaw(xrel as f64 / 3.);
                 }
@@ -100,7 +103,6 @@ impl InputHandler {
                 self.mouse_captured = true;
                 context.mouse().set_relative_mouse_mode(true);
             },
-
             _ => ()
         }
     }
@@ -113,5 +115,13 @@ impl InputHandler {
 
         if self.rolling_ccw { camera.roll(-1.4); }
         if self.rolling_cw { camera.roll(1.4); }
+
+        self.dirty = self.dirty | self.moving_left || self.moving_right
+            || self.moving_forward || self.moving_backward
+            || self.rolling_ccw || self.rolling_cw;
+    }
+
+    pub fn clear(&mut self) {
+        self.dirty = false;
     }
 }
