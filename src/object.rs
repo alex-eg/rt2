@@ -4,6 +4,7 @@ use material::Material;
 
 use raytracer::Ray;
 use light::Light;
+use animation::SetPosition;
 
 #[derive(Clone)]
 pub struct Object {
@@ -16,6 +17,28 @@ impl Object {
     pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>,
                          light: &Light) -> Vec3<f64> {
         self.mat.compute_color(ray, tnear, nhit, light)
+impl SetPosition for Object {
+    // TODO. This is stub implementation.
+    // We need functional scene graph to properly
+    // handle relative positions of hierarchical objects
+    fn set_position(&mut self, pos: Vec3<f64>) {
+        match self.shapes[0] {
+            Shape::Box { ref mut vmin, ref mut vmax } => {
+                let d = *vmax - *vmin;
+                *vmin = pos;
+                *vmax = pos + d;
+            }
+            Shape::Sphere { ref mut center, .. } => *center = pos,
+            Shape::Triangle { .. } => ()
+        }
+    }
+
+    fn get_position(&self) -> Vec3<f64> {
+        match self.shapes[0] {
+            Shape::Box { vmin, .. } => vmin,
+            Shape::Sphere { center, .. } => center,
+            Shape::Triangle { .. } => Vec3::new(0., 0., 0.)
+        }
     }
 }
 

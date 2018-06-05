@@ -102,6 +102,18 @@ fn main() {
                              5., blue);
     let sphere7 = new_sphere("s7", Vec3::new(-20., -20., 20.),
                              5., red);
+    let mut a1= Animation::new(&sphere1, vec![
+        Vec3::new(0., -10., 0.)
+    ]);
+    let mut a2= Animation::new(&box1, vec![
+        Vec3::new(0., 7., 0.)
+    ]);
+    let mut a3= Animation::new(&sphere3, vec![
+        Vec3::new(0., -8., 0.)
+    ]);
+    let mut a4= Animation::new(&sphere4, vec![
+        Vec3::new(0., 5., 0.)
+    ]);
 
     let triangle = new_triangle("tri1", Vec3::new(0., -10., -10.),
                                 Vec3::new(-10., 10., 0.),
@@ -136,13 +148,7 @@ fn main() {
 
     let light1 = Light { pos: Vec3::new(0., -60., 0.),
                          color: Vec3::new(1., 1., 1.) };
-    let mut a = Animation::new(&light1, vec![
-        Vec3::new(15., 0., 0.),
-        Vec3::new(0., 0., 15.),
-        Vec3::new(-15., 0., 0.),
-    ]);
-
-    let mut lights: Vec<Light> = vec![
+    let lights: Vec<Light> = vec![
         light1,
     ];
 
@@ -170,13 +176,17 @@ fn main() {
         }
         input_handler.update(&mut camera);
         fps.update();
-        a.update(&mut lights[0]);
-        if input_handler.dirty == true || first || a.dirty {
-            let updated = march(&camera, &objects, &lights);
-            pixels[..updated.len()].clone_from_slice(&updated[..]);
-            let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
-            first = false;
-        }
+        a1.update(&mut objects[0]);
+        a2.update(&mut objects[1]);
+        a3.update(&mut objects[2]);
+        a4.update(&mut objects[3]);
+        if first || input_handler.dirty ||
+            a1.dirty || a2.dirty || a3.dirty || a4.dirty {
+                let updated = march(&camera, &objects, &lights);
+                pixels[..updated.len()].clone_from_slice(&updated[..]);
+                let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
+                first = false;
+            }
         canvas.clear();
         canvas.copy(&texture, None, None).unwrap();
         let white = sdl2::pixels::Color{ r: 255, g: 255, b: 255, a: 255 };
