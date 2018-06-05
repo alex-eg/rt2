@@ -2,8 +2,6 @@ use na::Vector3 as Vec3;
 use geometry::Shape;
 use material::Material;
 
-use raytracer::Ray;
-use light::Light;
 use animation::SetPosition;
 
 #[derive(Clone)]
@@ -13,10 +11,6 @@ pub struct Object {
     pub mat: Material,
 }
 
-impl Object {
-    pub fn compute_color(&self, ray: &Ray, tnear: f64, nhit: Vec3<f64>,
-                         light: &Light) -> Vec3<f64> {
-        self.mat.compute_color(ray, tnear, nhit, light)
 impl SetPosition for Object {
     // TODO. This is stub implementation.
     // We need functional scene graph to properly
@@ -46,7 +40,7 @@ pub fn new_sphere(name: &str, center: Vec3<f64>, radius: f64, mat: Material) -> 
     Object {
         name: name.to_string(),
         shapes: vec![Shape::Sphere { center,
-                                    radius, }],
+                                     radius, }],
         mat,
     }
 }
