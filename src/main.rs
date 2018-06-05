@@ -35,8 +35,8 @@ use sdl2::render::TextureAccess;
 use std::time::Duration;
 use std::thread;
 
-const CAM_WIDTH: u32 = 320;
-const CAM_HEIGHT: u32 = 240;
+const CAM_WIDTH: u32 = 640;
+const CAM_HEIGHT: u32 = 480;
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 768;

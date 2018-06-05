@@ -22,7 +22,7 @@ pub fn march (cam: &Camera, objects: &[Object], lights: &[Light])
     let surf = Surface::new(cam.width, cam.height);
 
     pool.scoped(|scope| {
-        for chunk in surf.divide(32, 32) {
+        for chunk in surf.divide(160, 120) {
             scope.execute(move || {
                 process_part(cam, objects, lights, &chunk);
             });
