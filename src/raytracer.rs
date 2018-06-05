@@ -31,6 +31,8 @@ pub fn march (cam: &Camera, objects: &[Object], lights: &[Light])
     surf.pixels
 }
 
+const MAX_DEPTH: u8 = 5;
+
 fn process_part(cam: &Camera, objects: &[Object], lights: &[Light],
                 chunk: &Division) {
     let aspect: f64 = cam.width as f64 / cam.height as f64;
@@ -53,51 +55,87 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light],
                 dir: (cam.dir + xx + yy).normalize()
             };
 
-            let mut color = trace(&ray, objects, lights);
-            if color == Vec3::new(0., 0., 0.) {
-                color = Vec3::new(chunk.x0 as f64 / cam.width as f64, chunk.y0 as f64/ cam.height as f64, 0.7);
-            }
+            let default_color = Vec3::new(chunk.x0 as f64 / cam.width as f64, chunk.y0 as f64/ cam.height as f64, 0.7);
+            let mut color = trace(&ray, objects, lights, &default_color, 0);
             chunk.set_color(x, y, color);
         }
     }
 }
 
-fn hit(ray: &Ray, shape: &Shape) -> f64 {
+fn hit(ray: &Ray, shape: &Shape) -> (f64, f64) {
     let (t0, t1) = shape.intersect(ray);
-    if t0 < 0. { t1 } else { t0 }
+    if t0 < 0. { (t1, t0) } else { (t0, t1) }
 }
 
-fn trace(ray: &Ray, objects: &[Object], lights: &[Light]) -> Vec3<f64> {
-    let mut tnear = INFINITY;
+fn trace(ray: &Ray, objects: &[Object], lights: &[Light], default_color: &Vec3<f64>, depth: u8) -> Vec3<f64> {
+    if depth > MAX_DEPTH {
+        return Vec3::new(0.5, 0.5, 0.5);
+    }
+    let (mut tnear, mut tfar) = (INFINITY, INFINITY);
     let mut hit_obj: &Object = &objects[0];
     let mut hit_shape: &Shape = &hit_obj.shapes[0];
     for obj in objects {
         for shape in obj.shapes.iter() {
-            let t = hit(ray, shape);
-            if t < tnear {
-                tnear = t;
+            let (t1, t2) = hit(ray, shape);
+            if t1 < tnear {
+                tnear = t1;
+                tfar = t2;
                 hit_shape = &shape;
                 hit_obj = &obj;
             }
         }
     }
-    let mut color = Vec3::new(0., 0., 0.);
+    let mut color = *default_color;
     if tnear != INFINITY {
-        color = Vec3::new(0.001, 0., 0.);
+        color = Vec3::new(0., 0., 0.,);
         let nhit = hit_shape.get_normal(ray, tnear);
         let phit = ray.origin + ray.dir * tnear;
-        'light: for light in lights {
-            for obj in objects {
+        for light in lights {
+            let mut light_shaded = false;
+            'shade: for obj in objects {
                 for shape in obj.shapes.iter() {
                     let shadow_ray = Ray {
                         origin: phit + nhit * 0.001,
                         dir: (light.pos - phit).normalize() };
-                    if hit(&shadow_ray, shape) != INFINITY {
-                        continue 'light;
+                    let (t1, _) = hit(&shadow_ray, shape);
+                    if t1 != INFINITY {
+                        light_shaded = true;
+                        break 'shade;
                     }
                 }
             }
-            color += hit_obj.compute_color(ray, tnear, nhit, light);
+            let mut reflected_color = Vec3::new(0., 0., 0.);
+            if hit_obj.mat.reflection > 0.0 {
+                let reflection_ray = Ray {
+                    origin: phit + nhit * 0.001,
+                    dir: ray.dir - 2. * nhit * nhit.dot(&ray.dir)
+                };
+                reflected_color = trace(&reflection_ray, objects, lights, &Vec3::new(0.0, 0.2, 0.4), depth + 1);
+            }
+
+            let mut refracted_color = Vec3::new(0., 0., 0.);
+            if hit_obj.mat.refraction > 0.0 {
+                // Snell's law
+                let n2 = hit_obj.mat.refraction;
+
+                let dot_in = nhit.dot(&ray.dir);
+                let factor_in = (n2 * n2 / (dot_in * dot_in) + 1.).sqrt() - 1.;
+                let ray_in = Ray {
+                    origin: phit + nhit * 0.001,
+                    dir: ray.dir + nhit * dot_in * factor_in
+                };
+                let (_, tfar_in) = hit(&ray_in, hit_shape);
+                let nhit_in = hit_shape.get_normal(&ray_in, tfar);
+
+                let dot_out = nhit_in.dot(&ray_in.dir);
+                let factor_out = ( -n2 * n2 / (dot_out * dot_out) + 1.).sqrt() - 1.;
+                let refraction_ray = Ray {
+                    origin: ray_in.origin + ray_in.dir * tfar_in - nhit_in * 0.001,
+                    dir: ray_in.dir + nhit_in * dot_out * factor_out
+                };
+                refracted_color = trace(&refraction_ray, objects, lights, &Vec3::new(0.0, 0.2, 0.4), depth + 1);
+            }
+            color += hit_obj.mat.compute_color(ray, tnear, nhit, light, reflected_color, refracted_color, light_shaded);
         }
     }
     color
