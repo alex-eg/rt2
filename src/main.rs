@@ -91,20 +91,21 @@ fn main() {
         .up(Vec3::new(0., -1., 0.))
         .build();
 
-    let sphere1 = new_sphere("s1", Vec3::new(20., 20., 20.),
-                             5., red);
-    let sphere2 = new_sphere("s2", Vec3::new(20., 20., -20.),
-                             5., red);
-    let sphere3 = new_sphere("s3", Vec3::new(20., -20., 20.),
-                             5., red);
-    let sphere4 = new_sphere("s4", Vec3::new(20., -20., -20.),
-                             5., red);
-    let sphere5 = new_sphere("s5", Vec3::new(-20., 20., 20.),
+    let sphere1 = new_sphere("s1", Vec3::new(15., 15., 15.),
+                             5., green);
+    let box1 = new_box("b1", Vec3::new(10., 10., -20.), Vec3::new(20., 20., -10.), red);
+    let sphere3 = new_sphere("s5", Vec3::new(-15., 15., 15.),
                              5., blue);
-    let sphere6 = new_sphere("s6", Vec3::new(-20., 20., -20.),
-                             5., blue);
-    let sphere7 = new_sphere("s7", Vec3::new(-20., -20., 20.),
+    let sphere4 = new_sphere("s6", Vec3::new(-15., 15., -15.),
                              5., red);
+    let sphere5 = new_sphere("s3", Vec3::new(15., -15., 15.),
+                             5., green);
+    let sphere6 = new_sphere("s4", Vec3::new(15., -15., -15.),
+                             5., blue);
+    let sphere7 = new_sphere("s7", Vec3::new(-15., -15., 15.),
+                             5., red);
+    let sphere8 = new_sphere("s8", Vec3::new(-15., -15., -15.),
+                             5., green);
     let mut a1= Animation::new(&sphere1, vec![
         Vec3::new(0., -10., 0.)
     ]);
@@ -121,12 +122,7 @@ fn main() {
     let triangle = new_triangle("tri1", Vec3::new(0., -10., -10.),
                                 Vec3::new(-10., 10., 0.),
                                 Vec3::new(10., 10., 0.),
-                                green);
-
-    let box1 = new_box("box", Vec3::new(5., 5., 5.),
-                       Vec3::new(10., 10., 10.),
-                       blue);
-
+                                blue);
     let small_tree = BoxBuilder::new()
         .add(10, 20, 0, 1)
         .add(10, 19, 0, 1)
@@ -134,19 +130,18 @@ fn main() {
         .add(10, 17, 1, 1)
         .add(10, 16, 1, 1)
         .build("tree", green);
-
-    let objects: Vec<Object> = vec![
+    let mut objects: Vec<Object> = vec![
         sphere1,
-        sphere2,
+        box1,
         sphere3,
         sphere4,
         sphere5,
         sphere6,
         sphere7,
-        box1,
         triangle,
         small_tree,
-        new_square("square", Vec3::new(0., 25., 0.), 128, red),
+        sphere8,
+        new_square("square", Vec3::new(0., 30., 0.), 128, blue),
     ];
 
     let light1 = Light { pos: Vec3::new(0., -60., 0.),
