@@ -61,23 +61,26 @@ fn main() {
     const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
     let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
 
-    let red = Material::Lambert { ambient: Vec3::new(0.1, 0.1, 0.1),
-                                  diffuse: Vec3::new(1., 0., 0.),
-                                  specular: Vec3::new(1., 1., 1.),
-                                  emission: Vec3::new(0., 0., 0.),
-                                  shininess: 30.0 };
+    let red = Material { ambient: Vec3::new(0.1, 0.1, 0.1),
+                         diffuse: Vec3::new(1., 0., 0.),
+                         specular: Vec3::new(1., 1., 1.),
+                         shininess: 30.0,
+                         reflection: 0.8,
+                         refraction: 0. };
 
-    let blue = Material::Lambert { ambient: Vec3::new(0.1, 0.1, 0.1),
-                                   diffuse: Vec3::new(0., 0.3, 1.),
-                                   specular: Vec3::new(1., 1., 1.),
-                                   emission: Vec3::new(0., 0., 0.),
-                                   shininess: 10.0 };
+    let blue = Material { ambient: Vec3::new(0.1, 0.1, 0.1),
+                          diffuse: Vec3::new(0., 0.3, 1.),
+                          specular: Vec3::new(1., 1., 1.),
+                          shininess: 10.0,
+                          reflection: 0.4,
+                          refraction: 1.025 };
 
-    let green = Material::Lambert { ambient: Vec3::new(0.1, 0.1, 0.1),
-                                    diffuse: Vec3::new(0., 1., 0.3),
-                                    specular: Vec3::new(1., 1., 1.),
-                                    emission: Vec3::new(0., 0., 0.),
-                                    shininess: 10.0 };
+    let green = Material { ambient: Vec3::new(0.1, 0.1, 0.1),
+                           diffuse: Vec3::new(0., 1., 0.3),
+                           specular: Vec3::new(1., 1., 1.),
+                           shininess: 10.0,
+                           reflection: 0.8,
+                           refraction: 0. };
 
     let mut camera = CamBuilder::new()
         .eye(Vec3::new(0., 0., 60.))
