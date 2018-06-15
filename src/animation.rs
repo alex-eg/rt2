@@ -1,22 +1,22 @@
 use na::Vector3 as Vec3;
 
 pub trait SetPosition {
-    fn set_position(&mut self, Vec3<f64>);
-    fn get_position(&self) -> Vec3<f64>;
+    fn set_position(&mut self, Vec3<f32>);
+    fn get_position(&self) -> Vec3<f32>;
 }
 
 pub struct Animation {
-    path_lengts: Vec<f64>,
-    control_points: Vec<Vec3<f64>>,
-    current: f64,
+    path_lengts: Vec<f32>,
+    control_points: Vec<Vec3<f32>>,
+    current: f32,
     i: usize,
-    dir: Vec3<f64>,
+    dir: Vec3<f32>,
     pub dirty: bool,
-    factor: f64,
+    factor: f32,
 }
 
 impl Animation {
-    pub fn new<T: SetPosition>(object: &T, path: Vec<Vec3<f64>>) -> Animation {
+    pub fn new<T: SetPosition>(object: &T, path: Vec<Vec3<f32>>) -> Animation {
         let mut control_points = Vec::new();
         let pos = object.get_position();
         control_points.push(pos);
@@ -24,7 +24,7 @@ impl Animation {
             control_points.push(acc + p);
             acc + p
         });
-        let mut path_lengts: Vec<f64> = path.iter().map(|p| p.norm()).collect();
+        let mut path_lengts: Vec<f32> = path.iter().map(|p| p.norm()).collect();
         let lastpath = &path.iter().fold(Vec3::new(0., 0., 0.), |acc, p| {
             acc + p
         });

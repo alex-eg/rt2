@@ -1,29 +1,29 @@
 use na::Vector3 as Vec3;
 use raytracer::Ray;
 use num::traits::Zero;
-use std::f64::INFINITY;
+use std::f32::INFINITY;
 
 #[derive(Clone, Copy)]
 pub enum Shape {
     Sphere {
-        radius: f64,
-        center: Vec3<f64>,
+        radius: f32,
+        center: Vec3<f32>,
     },
 
     Box {
-        vmin: Vec3<f64>,
-        vmax: Vec3<f64>,
+        vmin: Vec3<f32>,
+        vmax: Vec3<f32>,
     },
 
     Triangle {
-        a: Vec3<f64>,
-        b: Vec3<f64>,
-        c: Vec3<f64>
+        a: Vec3<f32>,
+        b: Vec3<f32>,
+        c: Vec3<f32>
     }
 }
 
 impl Shape {
-    pub fn get_normal(&self, ray: &Ray, tnear: f64) -> Vec3<f64> {
+    pub fn get_normal(&self, ray: &Ray, tnear: f32) -> Vec3<f32> {
         match *self {
             Shape::Box { vmin, vmax } => {
                 let phit = ray.origin + ray.dir * tnear;
@@ -64,7 +64,7 @@ impl Shape {
         }
     }
 
-    pub fn intersect(&self, ray: &Ray) -> (f64, f64) {
+    pub fn intersect(&self, ray: &Ray) -> (f32, f32) {
         let (mut t0, mut t1) = (INFINITY, INFINITY);
         match *self {
             Shape::Box { vmin, vmax } => {
@@ -116,7 +116,7 @@ impl Shape {
                 let d2 = l.dot(&l) - tca * tca;
                 let r2 = radius * radius;
                 if d2 > r2 { return (t0, t1); }
-                let thc: f64 = (r2 - d2).sqrt();
+                let thc: f32 = (r2 - d2).sqrt();
                 t0 = tca - thc;
                 t1 = tca + thc;
                 (t0, t1)

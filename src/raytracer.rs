@@ -8,11 +8,11 @@ use na::Vector3 as Vec3;
 use scoped_threadpool::Pool;
 use num_cpus;
 
-use std::f64::INFINITY;
+use std::f32::INFINITY;
 
 pub struct Ray {
-    pub dir: Vec3<f64>,
-    pub origin: Vec3<f64>
+    pub dir: Vec3<f32>,
+    pub origin: Vec3<f32>
 }
 
 pub fn march (cam: &Camera, objects: &[Object], lights: &[Light])
@@ -35,19 +35,19 @@ const MAX_DEPTH: u8 = 5;
 
 fn process_part(cam: &Camera, objects: &[Object], lights: &[Light],
                 chunk: &Division) {
-    let aspect: f64 = cam.width as f64 / cam.height as f64;
+    let aspect: f32 = cam.width as f32 / cam.height as f32;
     let angle = cam.fov.to_radians().tan();
-    let inv_width = 1. / cam.width as f64;
-    let inv_height = 1. / cam.height as f64;
+    let inv_width = 1. / cam.width as f32;
+    let inv_height = 1. / cam.height as f32;
     let right = cam.up.cross(&cam.dir).normalize();
     for yi in 0..chunk.h {
         for xi in 0..chunk.w {
             let x = xi + chunk.x0;
             let y = yi + chunk.y0;
 
-            let xx = right * (2. * (x as f64 + 0.5) * inv_width - 1.)
+            let xx = right * (2. * (x as f32 + 0.5) * inv_width - 1.)
                 * angle * aspect;
-            let yy = cam.up * (1. - 2. * (y as f64 + 0.5) * inv_height)
+            let yy = cam.up * (1. - 2. * (y as f32 + 0.5) * inv_height)
                 * angle;
 
             let ray = Ray {
@@ -55,19 +55,19 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light],
                 dir: (cam.dir + xx + yy).normalize()
             };
 
-            let default_color = Vec3::new(chunk.x0 as f64 / cam.width as f64, chunk.y0 as f64/ cam.height as f64, 0.7);
+            let default_color = Vec3::new(chunk.x0 as f32 / cam.width as f32, chunk.y0 as f32/ cam.height as f32, 0.7);
             let mut color = trace(&ray, objects, lights, &default_color, 0);
             chunk.set_color(x, y, color);
         }
     }
 }
 
-fn hit(ray: &Ray, shape: &Shape) -> (f64, f64) {
+fn hit(ray: &Ray, shape: &Shape) -> (f32, f32) {
     let (t0, t1) = shape.intersect(ray);
     if t0 < 0. { (t1, t0) } else { (t0, t1) }
 }
 
-fn trace(ray: &Ray, objects: &[Object], lights: &[Light], default_color: &Vec3<f64>, depth: u8) -> Vec3<f64> {
+fn trace(ray: &Ray, objects: &[Object], lights: &[Light], default_color: &Vec3<f32>, depth: u8) -> Vec3<f32> {
     if depth > MAX_DEPTH {
         return Vec3::new(0.5, 0.5, 0.5);
     }

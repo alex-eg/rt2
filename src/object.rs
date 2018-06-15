@@ -15,7 +15,7 @@ impl SetPosition for Object {
     // TODO. This is stub implementation.
     // We need functional scene graph to properly
     // handle relative positions of hierarchical objects
-    fn set_position(&mut self, pos: Vec3<f64>) {
+    fn set_position(&mut self, pos: Vec3<f32>) {
         match self.shapes[0] {
             Shape::Box { ref mut vmin, ref mut vmax } => {
                 let d = *vmax - *vmin;
@@ -27,7 +27,7 @@ impl SetPosition for Object {
         }
     }
 
-    fn get_position(&self) -> Vec3<f64> {
+    fn get_position(&self) -> Vec3<f32> {
         match self.shapes[0] {
             Shape::Box { vmin, .. } => vmin,
             Shape::Sphere { center, .. } => center,
@@ -36,7 +36,7 @@ impl SetPosition for Object {
     }
 }
 
-pub fn new_sphere(name: &str, center: Vec3<f64>, radius: f64, mat: Material) -> Object {
+pub fn new_sphere(name: &str, center: Vec3<f32>, radius: f32, mat: Material) -> Object {
     Object {
         name: name.to_string(),
         shapes: vec![Shape::Sphere { center,
@@ -45,7 +45,7 @@ pub fn new_sphere(name: &str, center: Vec3<f64>, radius: f64, mat: Material) -> 
     }
 }
 
-pub fn new_box(name: &str, vmin: Vec3<f64>, vmax: Vec3<f64>, mat: Material) -> Object {
+pub fn new_box(name: &str, vmin: Vec3<f32>, vmax: Vec3<f32>, mat: Material) -> Object {
     Object {
         name: name.to_string(),
         shapes: vec![Shape::Box { vmin, vmax }],
@@ -53,7 +53,7 @@ pub fn new_box(name: &str, vmin: Vec3<f64>, vmax: Vec3<f64>, mat: Material) -> O
     }
 }
 
-pub fn new_triangle(name: &str, a: Vec3<f64>, b: Vec3<f64>, c: Vec3<f64>, mat: Material) -> Object {
+pub fn new_triangle(name: &str, a: Vec3<f32>, b: Vec3<f32>, c: Vec3<f32>, mat: Material) -> Object {
     Object {
         name: name.to_string(),
         shapes: vec![Shape::Triangle { a, b, c }],
@@ -61,8 +61,8 @@ pub fn new_triangle(name: &str, a: Vec3<f64>, b: Vec3<f64>, c: Vec3<f64>, mat: M
     }
 }
 
-pub fn new_square(name: &str, center: Vec3<f64>, size: u16, mat: Material) -> Object {
-    let s = size as f64 / 2.;
+pub fn new_square(name: &str, center: Vec3<f32>, size: u16, mat: Material) -> Object {
+    let s = size as f32 / 2.;
     let a = Vec3::new(center.x - s, center.y, center.z - s);
     let b = Vec3::new(center.x + s, center.y, center.z - s);
     let c = Vec3::new(center.x + s, center.y, center.z + s);
@@ -88,12 +88,12 @@ impl BoxBuilder {
     pub fn add(mut self, x: i32, y: i32, z: i32, size: i32) -> BoxBuilder {
         assert!(size > 0);
         let new_box = Shape::Box {
-            vmin: Vec3::new(x as f64,
-                            y as f64,
-                            z as f64),
-            vmax: Vec3::new((x + size) as f64,
-                            (y + size) as f64,
-                            (z + size) as f64) };
+            vmin: Vec3::new(x as f32,
+                            y as f32,
+                            z as f32),
+            vmax: Vec3::new((x + size) as f32,
+                            (y + size) as f32,
+                            (z + size) as f32) };
         self.boxes.push(new_box);
         self
     }

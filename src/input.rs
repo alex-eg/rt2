@@ -15,7 +15,7 @@ pub struct InputHandler {
     rolling_cw: bool,
 
     mouse_captured: bool,
-    delta: f64,
+    delta: f32,
     pub dirty: bool,
 }
 
@@ -94,8 +94,8 @@ impl InputHandler {
             Event::MouseMotion { xrel, yrel, .. } => {
                 if self.mouse_captured {
                     self.dirty = true;
-                    camera.pitch(yrel as f64 / 3.);
-                    camera.yaw(xrel as f64 / 3.);
+                    camera.pitch(yrel as f32 / 3.);
+                    camera.yaw(xrel as f32 / 3.);
                 }
             },
 
