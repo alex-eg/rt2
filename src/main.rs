@@ -155,7 +155,7 @@ fn main() {
 
     let mut pump = context.event_pump().unwrap();
 
-    let mut fps = FpsCounter::new(1000);
+    let mut fps = FpsCounter::new(100);
     fps.restart();
     let mut input_handler = InputHandler::new();
     let mut first = true;
