@@ -1,26 +1,37 @@
-use na::{Vector3 as Vec3, Rotation3 as Rot3, Unit};
+use na::{Vector3 as Vec3, Rotation3 as Rot3, Unit, clamp};
 
 use num::traits::Zero;
+
+#[derive(Debug, Clone, Copy)]
+struct Rotate {
+    pub x: f32,
+    pub y: f32
+}
 
 #[derive(Debug, Clone, Copy)]
 pub struct Camera {
     /// Camera eye position
     pub eye: Vec3<f32>,
+
     /// Camera view direction vector
     pub dir: Vec3<f32>,
+
     pub up: Vec3<f32>,
     pub fov: f32,
     pub width: u32,
     pub height: u32,
+
+    angles: Rotate,
 }
 
 pub struct CamBuilder {
     /// Camera eye position
     eye: Vec3<f32>,
+
     /// Point to which camera looks at
     center: Vec3<f32>,
+
     up: Vec3<f32>,
-    /// View direction, i.e., center - eye vector
     fov: f32,
     width: u32,
     height: u32,
@@ -71,33 +82,38 @@ impl CamBuilder {
 
     pub fn build(&self) -> Camera {
         let dir = self.center - self.eye;
+        let y = Vec3::new(0.0, 0.0, 1.0).dot(&dir).acos().to_degrees();
         Camera {
             eye: self.eye,
             dir: dir,
             up: self.up,
             fov: self.fov,
             width: self.width,
-            height: self.height
+            height: self.height,
+            angles: Rotate { x: 0.0, y: y },
         }
     }
 }
 
 impl Camera {
-    pub fn roll(&mut self, angle: f32) {
-        let rot = Rot3::from_axis_angle(&Unit::new_normalize(self.dir), angle.to_radians());
-        self.up = (rot * self.up).normalize();
-    }
-
     pub fn yaw(&mut self, angle: f32) {
-        let rot = Rot3::from_axis_angle(&Unit::new_normalize(self.up), angle.to_radians());
-        self.dir = rot * self.dir;
+        self.angles.y -= angle;
+        if self.angles.y < 0.0 { self.angles.y += 360.0; }
+        if self.angles.y > 360.0 { self.angles.y -= 360.0; }
+        self.update();
     }
 
     pub fn pitch(&mut self, angle: f32) {
-        let side = self.up.cross(&self.dir);
-        let rot = Rot3::from_axis_angle(&Unit::new_normalize(side), angle.to_radians());
-        self.dir = rot * self.dir;
-        self.up = self.dir.cross(&side).normalize();
+        self.angles.x -= angle;
+        self.angles.x = clamp(self.angles.x, -89.0, 89.0);
+        self.update();
+    }
+
+    pub fn update(&mut self) {
+        let rot_x = Rot3::from_axis_angle(&Unit::new_normalize(Vec3::new(1.0, 0.0, 0.0)), self.angles.x.to_radians());
+        let rot_y = Rot3::from_axis_angle(&Unit::new_normalize(Vec3::new(0.0, 1.0, 0.0)), self.angles.y.to_radians());
+        self.dir = rot_y * rot_x * Vec3::new(0.0, 0.0, 1.0);
+        self.up = rot_y * rot_x * Vec3::new(0.0, -1.0, 0.0);
     }
 
     pub fn mov_fwd(&mut self, dist: f32) {
@@ -107,7 +123,8 @@ impl Camera {
 
     pub fn mov_side(&mut self, dist: f32) {
         let dir = self.dir;
-        let side = self.up.cross(&dir);
+        let mut side = self.up.cross(&dir);
+        side.y = 0.0;
         self.eye = self.eye + side * dist;
     }
 }

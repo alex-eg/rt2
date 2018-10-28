@@ -11,9 +11,6 @@ pub struct InputHandler {
     moving_forward: bool,
     moving_backward: bool,
 
-    rolling_ccw: bool,
-    rolling_cw: bool,
-
     mouse_captured: bool,
     delta: f32,
     pub dirty: bool,
@@ -26,9 +23,6 @@ impl InputHandler {
             moving_right: false,
             moving_forward: false,
             moving_backward: false,
-
-            rolling_ccw: false,
-            rolling_cw: false,
 
             mouse_captured: false,
             delta: 1.0,
@@ -43,12 +37,6 @@ impl InputHandler {
                     Keycode::Escape => {
                         self.mouse_captured = false;
                         context.mouse().set_relative_mouse_mode(false);
-                    },
-                    Keycode::Q => {
-                        self.rolling_ccw = true;
-                    },
-                    Keycode::E => {
-                        self.rolling_cw = true;
                     },
                     Keycode::W => {
                         self.moving_forward = true;
@@ -68,12 +56,6 @@ impl InputHandler {
 
             Event::KeyUp { keycode: Some(code), .. } => {
                 match code {
-                    Keycode::Q => {
-                        self.rolling_ccw = false;
-                    },
-                    Keycode::E => {
-                        self.rolling_cw = false;
-                    },
                     Keycode::W => {
                         self.moving_forward = false;
                     },
@@ -113,12 +95,8 @@ impl InputHandler {
         if self.moving_forward { camera.mov_fwd(self.delta); }
         if self.moving_backward { camera.mov_fwd(-self.delta); }
 
-        if self.rolling_ccw { camera.roll(-1.4); }
-        if self.rolling_cw { camera.roll(1.4); }
-
         self.dirty = self.dirty | self.moving_left || self.moving_right
-            || self.moving_forward || self.moving_backward
-            || self.rolling_ccw || self.rolling_cw;
+            || self.moving_forward || self.moving_backward;
     }
 
     pub fn clear(&mut self) {
