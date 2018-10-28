@@ -90,7 +90,7 @@ impl CamBuilder {
             fov: self.fov,
             width: self.width,
             height: self.height,
-            angles: Rotate { x: 0.0, y: y },
+            angles: Rotate { x: 0.0, y },
         }
     }
 }
