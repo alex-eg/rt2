@@ -1,5 +1,8 @@
-use na::Vector3 as Vec3;
-use raytracer::Ray;
+use crate::raytracer::Ray;
+
+use self::na::Vector3 as Vec3;
+use nalgebra as na;
+
 use num::traits::Zero;
 use std::f32::INFINITY;
 
@@ -18,8 +21,8 @@ pub enum Shape {
     Triangle {
         a: Vec3<f32>,
         b: Vec3<f32>,
-        c: Vec3<f32>
-    }
+        c: Vec3<f32>,
+    },
 }
 
 impl Shape {
@@ -32,12 +35,24 @@ impl Shape {
                 let phit_max = phit - vmax;
                 let mut nhit = Vec3::zero();
                 let eps = 1e-6;
-                if phit_min.x.abs() < eps { nhit.x = -1. }
-                if phit_min.y.abs() < eps { nhit.y = -1. }
-                if phit_min.z.abs() < eps { nhit.z = -1. }
-                if phit_max.x.abs() < eps { nhit.x = 1. }
-                if phit_max.y.abs() < eps { nhit.y = 1. }
-                if phit_max.z.abs() < eps { nhit.z = 1. }
+                if phit_min.x.abs() < eps {
+                    nhit.x = -1.
+                }
+                if phit_min.y.abs() < eps {
+                    nhit.y = -1.
+                }
+                if phit_min.z.abs() < eps {
+                    nhit.z = -1.
+                }
+                if phit_max.x.abs() < eps {
+                    nhit.x = 1.
+                }
+                if phit_max.y.abs() < eps {
+                    nhit.y = 1.
+                }
+                if phit_max.z.abs() < eps {
+                    nhit.z = 1.
+                }
                 nhit
             }
 
@@ -59,7 +74,6 @@ impl Shape {
                     nhit = -nhit;
                 }
                 nhit
-
             }
         }
     }
@@ -89,19 +103,33 @@ impl Shape {
                 let tymin = (if sign.y { b0.y } else { b1.y } - o.y) * d.y;
                 let tymax = (if sign.y { b1.y } else { b0.y } - o.y) * d.y;
 
-                if tmin > tymax || tymin > tmax { return (t0, t1) };
-                if tymin > tmin { tmin = tymin };
-                if tymax < tmax { tmax = tymax };
+                if tmin > tymax || tymin > tmax {
+                    return (t0, t1);
+                };
+                if tymin > tmin {
+                    tmin = tymin
+                };
+                if tymax < tmax {
+                    tmax = tymax
+                };
 
                 let tzmin = (if sign.z { b0.z } else { b1.z } - o.z) * d.z;
                 let tzmax = (if sign.z { b1.z } else { b0.z } - o.z) * d.z;
 
-                if tmin > tzmax || tzmin > tmax { return (t0, t1) };
-                if tzmin > tmin { tmin = tzmin };
-                if tzmax < tmax { tmax = tzmax };
+                if tmin > tzmax || tzmin > tmax {
+                    return (t0, t1);
+                };
+                if tzmin > tmin {
+                    tmin = tzmin
+                };
+                if tzmax < tmax {
+                    tmax = tzmax
+                };
 
                 if tmin < 0. {
-                    if tmax < 0. { return (t0, t1) };
+                    if tmax < 0. {
+                        return (t0, t1);
+                    };
                     t0 = tmax;
                 } else {
                     t0 = tmin;
@@ -112,10 +140,14 @@ impl Shape {
             Shape::Sphere { radius, center } => {
                 let l = center - ray.origin;
                 let tca = l.dot(&ray.dir);
-                if tca < 0. { return (t0, t1); }
+                if tca < 0. {
+                    return (t0, t1);
+                }
                 let d2 = l.dot(&l) - tca * tca;
                 let r2 = radius * radius;
-                if d2 > r2 { return (t0, t1); }
+                if d2 > r2 {
+                    return (t0, t1);
+                }
                 let thc: f32 = (r2 - d2).sqrt();
                 t0 = tca - thc;
                 t1 = tca + thc;
@@ -128,16 +160,22 @@ impl Shape {
                 let h = ray.dir.cross(&edge_1);
 
                 let d = edge_0.dot(&h);
-                if d  == 0. { return (t0, t1); }
+                if d == 0. {
+                    return (t0, t1);
+                }
 
                 let f = 1. / d;
                 let s = ray.origin - a;
                 let u = f * s.dot(&h);
-                if u < 0. || u > 1. { return (t0, t1); }
+                if u < 0. || u > 1. {
+                    return (t0, t1);
+                }
 
                 let q = s.cross(&edge_0);
                 let v = f * ray.dir.dot(&q);
-                if v < 0. || v + u > 1. { return (t0, t1); }
+                if v < 0. || v + u > 1. {
+                    return (t0, t1);
+                }
 
                 let t = f * edge_1.dot(&q);
                 if t > 0. {

@@ -4,14 +4,15 @@ use std::collections::VecDeque;
 
 pub struct FpsCounter {
     previous: u64,
-    times: VecDeque<u32>
+    times: VecDeque<u32>,
 }
 
 impl FpsCounter {
     pub fn new(span: usize) -> FpsCounter {
         FpsCounter {
             previous: 100000,
-            times: VecDeque::with_capacity(span) }
+            times: VecDeque::with_capacity(span),
+        }
     }
 
     pub fn restart(&mut self) {

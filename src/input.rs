@@ -1,4 +1,4 @@
-use camera::Camera;
+use crate::camera::Camera;
 
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
@@ -32,44 +32,46 @@ impl InputHandler {
 
     pub fn process(&mut self, event: Event, camera: &mut Camera, context: &Sdl) {
         match event {
-            Event::KeyDown { keycode: Some(code), .. } => {
-                match code {
-                    Keycode::Escape => {
-                        self.mouse_captured = false;
-                        context.mouse().set_relative_mouse_mode(false);
-                    },
-                    Keycode::W => {
-                        self.moving_forward = true;
-                    },
-                    Keycode::S => {
-                        self.moving_backward = true;
-                    },
-                    Keycode::A => {
-                        self.moving_left = true;
-                    },
-                    Keycode::D => {
-                        self.moving_right = true;
-                    },
-                    _ => ()
+            Event::KeyDown {
+                keycode: Some(code),
+                ..
+            } => match code {
+                Keycode::Escape => {
+                    self.mouse_captured = false;
+                    context.mouse().set_relative_mouse_mode(false);
                 }
+                Keycode::W => {
+                    self.moving_forward = true;
+                }
+                Keycode::S => {
+                    self.moving_backward = true;
+                }
+                Keycode::A => {
+                    self.moving_left = true;
+                }
+                Keycode::D => {
+                    self.moving_right = true;
+                }
+                _ => (),
             },
 
-            Event::KeyUp { keycode: Some(code), .. } => {
-                match code {
-                    Keycode::W => {
-                        self.moving_forward = false;
-                    },
-                    Keycode::S => {
-                        self.moving_backward = false;
-                    },
-                    Keycode::A => {
-                        self.moving_left = false;
-                    },
-                    Keycode::D => {
-                        self.moving_right = false;
-                    },
-                    _ => ()
+            Event::KeyUp {
+                keycode: Some(code),
+                ..
+            } => match code {
+                Keycode::W => {
+                    self.moving_forward = false;
                 }
+                Keycode::S => {
+                    self.moving_backward = false;
+                }
+                Keycode::A => {
+                    self.moving_left = false;
+                }
+                Keycode::D => {
+                    self.moving_right = false;
+                }
+                _ => (),
             },
 
             // Mouse
@@ -79,24 +81,37 @@ impl InputHandler {
                     camera.pitch(yrel as f32 / 3.);
                     camera.yaw(xrel as f32 / 3.);
                 }
-            },
+            }
 
-            Event::MouseButtonDown { mouse_btn: MouseButton::Left, .. } => {
+            Event::MouseButtonDown {
+                mouse_btn: MouseButton::Left,
+                ..
+            } => {
                 self.mouse_captured = true;
                 context.mouse().set_relative_mouse_mode(true);
-            },
-            _ => ()
+            }
+            _ => (),
         }
     }
 
     pub fn update(&mut self, camera: &mut Camera) {
-        if self.moving_left { camera.mov_side(-self.delta); }
-        if self.moving_right { camera.mov_side(self.delta); }
-        if self.moving_forward { camera.mov_fwd(self.delta); }
-        if self.moving_backward { camera.mov_fwd(-self.delta); }
+        if self.moving_left {
+            camera.mov_side(-self.delta);
+        }
+        if self.moving_right {
+            camera.mov_side(self.delta);
+        }
+        if self.moving_forward {
+            camera.mov_fwd(self.delta);
+        }
+        if self.moving_backward {
+            camera.mov_fwd(-self.delta);
+        }
 
-        self.dirty = self.dirty | self.moving_left || self.moving_right
-            || self.moving_forward || self.moving_backward;
+        self.dirty = self.dirty | self.moving_left
+            || self.moving_right
+            || self.moving_forward
+            || self.moving_backward;
     }
 
     pub fn clear(&mut self) {

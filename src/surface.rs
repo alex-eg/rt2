@@ -1,4 +1,5 @@
-use na::Vector3 as Vec3;
+use self::na::Vector3 as Vec3;
+use nalgebra as na;
 
 use std::collections::HashSet;
 
@@ -6,7 +7,7 @@ use std::collections::HashSet;
 pub struct Surface {
     pub pixels: Vec<u8>,
     pub w: u32,
-    pub h: u32
+    pub h: u32,
 }
 
 #[derive(Hash, PartialEq, Eq)]
@@ -34,23 +35,43 @@ impl Surface {
     pub fn divide(&self, dw: u32, dh: u32) -> HashSet<Division> {
         let mut w_overflow = false;
         let mut h_overflow = false;
-        let w_num = self.w / dw +
-            if self.w % dw != 0 { w_overflow = true; 1} else { 0 };
-        let h_num = self.h / dh +
-            if self.h % dh != 0 { h_overflow = true; 1 } else { 0 };
+        let w_num = self.w / dw
+            + if self.w % dw != 0 {
+                w_overflow = true;
+                1
+            } else {
+                0
+            };
+        let h_num = self.h / dh
+            + if self.h % dh != 0 {
+                h_overflow = true;
+                1
+            } else {
+                0
+            };
 
         let mut divisions = HashSet::new();
         for i in 0..w_num {
             for j in 0..h_num {
                 let w = if w_overflow && i == w_num - 1 {
                     self.w - dw * (w_num - 1)
-                } else { dw };
+                } else {
+                    dw
+                };
 
                 let h = if h_overflow && j == h_num - 1 {
                     self.h - dh * (h_num - 1)
-                } else { dh };
+                } else {
+                    dh
+                };
 
-                divisions.insert(Division { x0: i * dw, y0: j * dh, w, h, surf: self });
+                divisions.insert(Division {
+                    x0: i * dw,
+                    y0: j * dh,
+                    w,
+                    h,
+                    surf: self,
+                });
             }
         }
         divisions

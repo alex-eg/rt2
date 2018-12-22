@@ -1,7 +1,8 @@
-use na::Vector3 as Vec3;
+use self::na::Vector3 as Vec3;
+use nalgebra as na;
 
 pub trait SetPosition {
-    fn set_position(&mut self, Vec3<f32>);
+    fn set_position(&mut self, pos: Vec3<f32>);
     fn get_position(&self) -> Vec3<f32>;
 }
 
@@ -25,12 +26,18 @@ impl Animation {
             acc + p
         });
         let mut path_lengts: Vec<f32> = path.iter().map(|p| p.norm()).collect();
-        let lastpath = &path.iter().fold(Vec3::new(0., 0., 0.), |acc, p| {
-            acc + p
-        });
+        let lastpath = &path.iter().fold(Vec3::new(0., 0., 0.), |acc, p| acc + p);
         path_lengts.push(lastpath.norm());
         let dir = control_points[1] - pos;
-        Animation { dirty: false, control_points, current: path_lengts[0], path_lengts, i: 0 , dir, factor: 1. / 10. }
+        Animation {
+            dirty: false,
+            control_points,
+            current: path_lengts[0],
+            path_lengts,
+            i: 0,
+            dir,
+            factor: 1. / 10.,
+        }
     }
 
     pub fn update<T: SetPosition>(&mut self, object: &mut T) {
