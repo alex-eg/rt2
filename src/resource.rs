@@ -1,7 +1,7 @@
-use sdl2::ttf::{Sdl2TtfContext, Font};
 use sdl2;
-use std::path::PathBuf;
+use sdl2::ttf::{Font, Sdl2TtfContext};
 use std;
+use std::path::PathBuf;
 
 pub struct ResourceLoader {
     res_prefix: String,
@@ -11,25 +11,22 @@ pub struct ResourceLoader {
 
 impl ResourceLoader {
     pub fn new() -> ResourceLoader {
-        let res_dir =
-            match std::env::current_exe() {
-                Ok(path_buf) => {
-                    match std::fs::read_link(path_buf.as_path()) {
-                        Ok(mut path_buf) => {
-                            path_buf.pop();
-                            path_buf.push("res");
-                            path_buf
-                        },
-                        Err(_) => PathBuf::from("./res/")
-                    }
-                },
-                Err(_) => PathBuf::from("./res/")
-            };
+        let res_dir = match std::env::current_exe() {
+            Ok(path_buf) => match std::fs::read_link(path_buf.as_path()) {
+                Ok(mut path_buf) => {
+                    path_buf.pop();
+                    path_buf.push("res");
+                    path_buf
+                }
+                Err(_) => PathBuf::from("./res/"),
+            },
+            Err(_) => PathBuf::from("./res/"),
+        };
         let ttf = sdl2::ttf::init().unwrap();
         ResourceLoader {
             res_prefix: String::from("~res:"),
             res_dir,
-            ttf
+            ttf,
         }
     }
 

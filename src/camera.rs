@@ -1,11 +1,12 @@
-use na::{Vector3 as Vec3, Rotation3 as Rot3, Unit, clamp};
+use self::na::{clamp, Rotation3 as Rot3, Unit, Vector3 as Vec3};
+use nalgebra as na;
 
 use num::traits::Zero;
 
 #[derive(Debug, Clone, Copy)]
 struct Rotate {
     pub x: f32,
-    pub y: f32
+    pub y: f32,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -98,8 +99,12 @@ impl CamBuilder {
 impl Camera {
     pub fn yaw(&mut self, angle: f32) {
         self.angles.y -= angle;
-        if self.angles.y < 0.0 { self.angles.y += 360.0; }
-        if self.angles.y > 360.0 { self.angles.y -= 360.0; }
+        if self.angles.y < 0.0 {
+            self.angles.y += 360.0;
+        }
+        if self.angles.y > 360.0 {
+            self.angles.y -= 360.0;
+        }
         self.update();
     }
 
@@ -110,8 +115,14 @@ impl Camera {
     }
 
     pub fn update(&mut self) {
-        let rot_x = Rot3::from_axis_angle(&Unit::new_normalize(Vec3::new(1.0, 0.0, 0.0)), self.angles.x.to_radians());
-        let rot_y = Rot3::from_axis_angle(&Unit::new_normalize(Vec3::new(0.0, 1.0, 0.0)), self.angles.y.to_radians());
+        let rot_x = Rot3::from_axis_angle(
+            &Unit::new_normalize(Vec3::new(1.0, 0.0, 0.0)),
+            self.angles.x.to_radians(),
+        );
+        let rot_y = Rot3::from_axis_angle(
+            &Unit::new_normalize(Vec3::new(0.0, 1.0, 0.0)),
+            self.angles.y.to_radians(),
+        );
         self.dir = rot_y * rot_x * Vec3::new(0.0, 0.0, 1.0);
         self.up = rot_y * rot_x * Vec3::new(0.0, -1.0, 0.0);
     }
