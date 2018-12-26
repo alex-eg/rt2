@@ -22,6 +22,4 @@ Controls
 * LMB - lock mouse
 * Escape - release mouse
 * Mouse - look around
-* Q - roll CCW
-* E - roll CW
 * WASD - move
