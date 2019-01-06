@@ -3,6 +3,7 @@ use crate::geometry::Shape;
 use crate::light::Light;
 use crate::object::Object;
 use crate::surface::{Division, Surface};
+use crate::material::Hit;
 
 use self::na::Vector3 as Vec3;
 use nalgebra as na;
@@ -115,23 +116,23 @@ fn trace(
                     }
                 }
             }
-            let mut reflected_color = Vec3::new(0., 0., 0.);
-            if hit_obj.mat.reflection > 0.0 {
+            let reflected_color = if hit_obj.mat.reflection > 0.0 {
                 let reflection_ray = Ray {
                     origin: phit + nhit * 0.001,
                     dir: ray.dir - 2. * nhit * nhit.dot(&ray.dir),
                 };
-                reflected_color = trace(
+                trace(
                     &reflection_ray,
                     objects,
                     lights,
                     &Vec3::new(0.0, 0.2, 0.4),
                     depth + 1,
-                );
-            }
+                )
+            } else {
+                Vec3::new(0., 0., 0.)
+            };
 
-            let mut refracted_color = Vec3::new(0., 0., 0.);
-            if hit_obj.mat.refraction > 0.0 {
+            let refracted_color = if hit_obj.mat.refraction > 0.0 {
                 // Snell's law
                 let n2 = hit_obj.mat.refraction;
 
@@ -150,18 +151,19 @@ fn trace(
                     origin: ray_in.origin + ray_in.dir * tfar_in - nhit_in * 0.001,
                     dir: ray_in.dir + nhit_in * dot_out * factor_out,
                 };
-                refracted_color = trace(
+                trace(
                     &refraction_ray,
                     objects,
                     lights,
                     &Vec3::new(0.0, 0.2, 0.4),
                     depth + 1,
-                );
-            }
+                )
+            } else {
+                Vec3::new(0., 0., 0.)
+            };
+            let h: Hit = Hit { ray, tnear, nhit };
             color += hit_obj.mat.compute_color(
-                ray,
-                tnear,
-                nhit,
+                &h,
                 light,
                 reflected_color,
                 refracted_color,

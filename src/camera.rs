@@ -86,7 +86,7 @@ impl CamBuilder {
         let y = Vec3::new(0.0, 0.0, 1.0).dot(&dir).acos().to_degrees();
         Camera {
             eye: self.eye,
-            dir: dir,
+            dir,
             up: self.up,
             fov: self.fov,
             width: self.width,
@@ -129,13 +129,13 @@ impl Camera {
 
     pub fn mov_fwd(&mut self, dist: f32) {
         let dir = self.dir;
-        self.eye = self.eye + dir * dist;
+        self.eye += dir * dist;
     }
 
     pub fn mov_side(&mut self, dist: f32) {
         let dir = self.dir;
         let mut side = self.up.cross(&dir);
         side.y = 0.0;
-        self.eye = self.eye + side * dist;
+        self.eye += side * dist;
     }
 }

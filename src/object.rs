@@ -65,11 +65,11 @@ pub fn new_triangle(name: &str, a: Vec3<f32>, b: Vec3<f32>, c: Vec3<f32>, mat: M
 }
 
 pub fn new_square(name: &str, center: Vec3<f32>, size: u16, mat: Material) -> Object {
-    let s = size as f32 / 2.;
-    let a = Vec3::new(center.x - s, center.y, center.z - s);
-    let b = Vec3::new(center.x + s, center.y, center.z - s);
-    let c = Vec3::new(center.x + s, center.y, center.z + s);
-    let d = Vec3::new(center.x - s, center.y, center.z + s);
+    let s_2 = f32::from(size) / 2.;
+    let a = Vec3::new(center.x - s_2, center.y, center.z - s_2);
+    let b = Vec3::new(center.x + s_2, center.y, center.z - s_2);
+    let c = Vec3::new(center.x + s_2, center.y, center.z + s_2);
+    let d = Vec3::new(center.x - s_2, center.y, center.z + s_2);
     Object {
         name: name.to_string(),
         shapes: vec![

@@ -110,10 +110,10 @@ fn main() {
     let sphere6 = new_sphere("s4", Vec3::new(15., -15., -15.), 5., blue);
     let sphere7 = new_sphere("s7", Vec3::new(-15., -15., 15.), 5., red);
     let sphere8 = new_sphere("s8", Vec3::new(-15., -15., -15.), 5., green);
-    let mut a1 = Animation::new(&sphere1, vec![Vec3::new(0., -10., 0.)]);
-    let mut a2 = Animation::new(&box1, vec![Vec3::new(0., 7., 0.)]);
-    let mut a3 = Animation::new(&sphere3, vec![Vec3::new(0., -8., 0.)]);
-    let mut a4 = Animation::new(&sphere4, vec![Vec3::new(0., 5., 0.)]);
+    let mut a1 = Animation::new(&sphere1, &[Vec3::new(0., -10., 0.)]);
+    let mut a2 = Animation::new(&box1, &[Vec3::new(0., 7., 0.)]);
+    let mut a3 = Animation::new(&sphere3, &[Vec3::new(0., -8., 0.)]);
+    let mut a4 = Animation::new(&sphere4, &[Vec3::new(0., 5., 0.)]);
 
     let triangle = new_triangle(
         "tri1",
@@ -164,7 +164,7 @@ fn main() {
             match event {
                 Event::Quit { .. } => break 'running,
 
-                _ => input_handler.process(event, &mut camera, &context),
+                _ => input_handler.process(&event, &mut camera, &context),
             }
         }
         input_handler.update(&mut camera);

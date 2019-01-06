@@ -10,7 +10,7 @@ pub struct FpsCounter {
 impl FpsCounter {
     pub fn new(span: usize) -> FpsCounter {
         FpsCounter {
-            previous: 100000,
+            previous: 100_000,
             times: VecDeque::with_capacity(span),
         }
     }
@@ -32,9 +32,9 @@ impl FpsCounter {
     pub fn fps(&self) -> f32 {
         let mut acc: u64 = 0;
         for t in &self.times {
-            acc += *t as u64;
+            acc += u64::from(*t);
         }
 
-        1. / (acc as f32 / self.times.len() as f32) * 1000000000.
+        1. / (acc as f32 / self.times.len() as f32) * 1_000_000_000.
     }
 }

@@ -159,29 +159,29 @@ impl Shape {
                 let edge_1 = c - a;
                 let h = ray.dir.cross(&edge_1);
 
-                let d = edge_0.dot(&h);
-                if d == 0. {
+                let dot = edge_0.dot(&h);
+                if dot == 0. {
                     return (t0, t1);
                 }
 
-                let f = 1. / d;
+                let dot_r = 1. / dot;
                 let s = ray.origin - a;
-                let u = f * s.dot(&h);
+                let u = dot_r * s.dot(&h);
                 if u < 0. || u > 1. {
                     return (t0, t1);
                 }
 
-                let q = s.cross(&edge_0);
-                let v = f * ray.dir.dot(&q);
+                let cross = s.cross(&edge_0);
+                let v = dot_r * ray.dir.dot(&cross);
                 if v < 0. || v + u > 1. {
                     return (t0, t1);
                 }
 
-                let t = f * edge_1.dot(&q);
-                if t > 0. {
-                    return (t, t1);
+                let hit = dot_r * edge_1.dot(&cross);
+                if hit > 0. {
+                    (hit, t1)
                 } else {
-                    return (t0, t1);
+                    (t0, t1)
                 }
             }
         }

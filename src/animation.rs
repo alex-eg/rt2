@@ -17,7 +17,7 @@ pub struct Animation {
 }
 
 impl Animation {
-    pub fn new<T: SetPosition>(object: &T, path: Vec<Vec3<f32>>) -> Animation {
+    pub fn new<T: SetPosition>(object: &T, path: &[Vec3<f32>]) -> Animation {
         let mut control_points = Vec::new();
         let pos = object.get_position();
         control_points.push(pos);

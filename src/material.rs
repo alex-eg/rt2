@@ -14,6 +14,12 @@ pub struct Material {
     pub refraction: f32,
 }
 
+pub struct Hit<'a> {
+    pub ray: &'a Ray,
+    pub tnear: f32,
+    pub nhit: Vec3<f32>,
+}
+
 fn max(a: f32, b: f32) -> f32 {
     if a > b {
         a
@@ -33,9 +39,7 @@ fn clamp(f: Vec3<f32>) -> Vec3<f32> {
 impl Material {
     pub fn compute_color(
         &self,
-        ray: &Ray,
-        tnear: f32,
-        nhit: Vec3<f32>,
+        hit: &Hit,
         light: &Light,
         reflected_color: Vec3<f32>,
         refracted_color: Vec3<f32>,
@@ -44,6 +48,10 @@ impl Material {
         let mul = |l: &Vec3<f32>, r: &Vec3<f32>| -> Vec3<f32> {
             Vec3::new(l.x * r.x, l.y * r.y, l.z * r.z)
         };
+
+        let ray = hit.ray;
+        let tnear = hit.tnear;
+        let nhit = hit.nhit;
 
         let phit = ray.origin + ray.dir * tnear;
         let ldir = (light.pos - phit).normalize();
@@ -60,21 +68,19 @@ impl Material {
             } else {
                 clamp(lambert + phong + self.ambient)
             }
+        } else if light_shaded {
+            clamp(
+                mul(&self.ambient, &self.diffuse)
+                    + reflected_color * self.reflection
+                    + refracted_color * (1.0 - self.reflection),
+            )
         } else {
-            if light_shaded {
-                clamp(
-                    mul(&self.ambient, &self.diffuse)
-                        + reflected_color * self.reflection
-                        + refracted_color * (1.0 - self.reflection),
-                )
-            } else {
-                clamp(
-                    phong
-                        + lambert
-                        + reflected_color * self.reflection
-                        + refracted_color * (1.0 - self.reflection),
-                )
-            }
+            clamp(
+                phong
+                    + lambert
+                    + reflected_color * self.reflection
+                    + refracted_color * (1.0 - self.reflection),
+            )
         }
     }
 }

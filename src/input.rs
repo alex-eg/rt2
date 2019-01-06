@@ -30,7 +30,7 @@ impl InputHandler {
         }
     }
 
-    pub fn process(&mut self, event: Event, camera: &mut Camera, context: &Sdl) {
+    pub fn process(&mut self, event: &Event, camera: &mut Camera, context: &Sdl) {
         match event {
             Event::KeyDown {
                 keycode: Some(code),
@@ -78,8 +78,8 @@ impl InputHandler {
             Event::MouseMotion { xrel, yrel, .. } => {
                 if self.mouse_captured {
                     self.dirty = true;
-                    camera.pitch(yrel as f32 / 3.);
-                    camera.yaw(xrel as f32 / 3.);
+                    camera.pitch(*yrel as f32 / 3.);
+                    camera.yaw(*xrel as f32 / 3.);
                 }
             }
 
