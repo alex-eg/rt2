@@ -11,7 +11,8 @@ mod raytracer;
 mod resource;
 mod surface;
 
-use nalgebra::Vector3 as Vec3;
+use nalgebra as na;
+use self::na::Vector3 as Vec3;
 
 fn main() {
     self::app::run()

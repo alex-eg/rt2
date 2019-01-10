@@ -1,9 +1,7 @@
 use crate::animation::SetPosition;
 use crate::geometry::Shape;
 use crate::material::Material;
-
-use self::na::Vector3 as Vec3;
-use nalgebra as na;
+use crate::Vec3;
 
 #[derive(Clone)]
 pub struct Object {

@@ -4,9 +4,8 @@ use crate::light::Light;
 use crate::object::Object;
 use crate::surface::{Division, Surface};
 use crate::material::Hit;
+use crate::Vec3;
 
-use self::na::Vector3 as Vec3;
-use nalgebra as na;
 use num_cpus;
 use scoped_threadpool::Pool;
 

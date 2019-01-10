@@ -1,5 +1,4 @@
-use self::na::Vector3 as Vec3;
-use nalgebra as na;
+use crate::Vec3;
 
 pub trait SetPosition {
     fn set_position(&mut self, pos: Vec3<f32>);

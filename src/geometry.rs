@@ -1,7 +1,5 @@
 use crate::raytracer::Ray;
-
-use self::na::Vector3 as Vec3;
-use nalgebra as na;
+use crate::Vec3;
 
 use num::traits::Zero;
 use std::f32::INFINITY;

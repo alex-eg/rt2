@@ -1,7 +1,5 @@
 use crate::animation::SetPosition;
-
-use self::na::Vector3 as Vec3;
-use nalgebra as na;
+use crate::Vec3;
 
 #[derive(Clone, Copy)]
 pub struct Light {

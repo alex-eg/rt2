@@ -1,8 +1,6 @@
 use crate::light::Light;
 use crate::raytracer::Ray;
-
-use self::na::Vector3 as Vec3;
-use nalgebra as na;
+use crate::Vec3;
 
 #[derive(Clone, Copy)]
 pub struct Material {

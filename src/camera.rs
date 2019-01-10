@@ -1,5 +1,5 @@
-use self::na::{clamp, Rotation3 as Rot3, Unit, Vector3 as Vec3};
-use nalgebra as na;
+use crate::na::{clamp, Rotation3 as Rot3, Unit};
+use crate::Vec3;
 
 use num::traits::Zero;
 
