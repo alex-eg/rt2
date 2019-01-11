@@ -16,28 +16,51 @@ pub struct Ray {
     pub origin: Vec3<f32>,
 }
 
+struct Params
+{
+    max_depth: u8,
+    aspect: f32,
+    angle: f32,
+    inv_width: f32,
+    inv_height: f32,
+    right: Vec3<f32>,
+}
+
 pub fn march(cam: &Camera, objects: &[Object], lights: &[Light]) -> Vec<u8> {
     let mut pool = Pool::new(num_cpus::get() as u32);
     let surf = Surface::new(cam.width, cam.height);
 
+    let params = Params {
+        max_depth: 5,
+        aspect: cam.width as f32 / cam.height as f32,
+        angle: cam.fov.to_radians().tan(),
+        inv_width: 1. / cam.width as f32,
+        inv_height: 1. / cam.height as f32,
+        right: cam.up.cross(&cam.dir).normalize(),
+    };
     pool.scoped(|scope| {
-        for chunk in surf.divide(16, 16) {
-            scope.execute(move || {
-                process_part(cam, objects, lights, &chunk);
+        for chunk in surf.divide(128, 128) {
+            scope.execute(|| {
+                process_part(cam, objects, lights, chunk, &params);
             });
         }
     });
     surf.pixels
 }
 
-const MAX_DEPTH: u8 = 5;
+fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: Division, params: &Params) {
+    let aspect = params.aspect;
+    let angle = params.angle;
+    let inv_width = params.inv_width;
+    let inv_height = params.inv_height;
+    let right = params.right;
 
-fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: &Division) {
-    let aspect: f32 = cam.width as f32 / cam.height as f32;
-    let angle = cam.fov.to_radians().tan();
-    let inv_width = 1. / cam.width as f32;
-    let inv_height = 1. / cam.height as f32;
-    let right = cam.up.cross(&cam.dir).normalize();
+    let default_color: Vec3<f32> = Vec3::new(
+        chunk.x0 as f32 / cam.width as f32,
+        chunk.y0 as f32 / cam.height as f32,
+        0.7,
+    );
+
     for yi in 0..chunk.h {
         for xi in 0..chunk.w {
             let x = xi + chunk.x0;
@@ -51,12 +74,7 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: &Divi
                 dir: (cam.dir + xx + yy).normalize(),
             };
 
-            let default_color = Vec3::new(
-                chunk.x0 as f32 / cam.width as f32,
-                chunk.y0 as f32 / cam.height as f32,
-                0.7,
-            );
-            let color = trace(&ray, objects, lights, &default_color, 0);
+            let color = trace(&ray, objects, lights, &default_color, 0, params.max_depth);
             chunk.set_color(x, y, color);
         }
     }
@@ -77,8 +95,9 @@ fn trace(
     lights: &[Light],
     default_color: &Vec3<f32>,
     depth: u8,
+    max_depth: u8,
 ) -> Vec3<f32> {
-    if depth > MAX_DEPTH {
+    if depth > max_depth {
         return Vec3::new(0.5, 0.5, 0.5);
     }
     let (mut tnear, mut tfar) = (INFINITY, INFINITY);
@@ -126,6 +145,7 @@ fn trace(
                     lights,
                     &Vec3::new(0.0, 0.2, 0.4),
                     depth + 1,
+                    max_depth
                 )
             } else {
                 Vec3::new(0., 0., 0.)
@@ -156,6 +176,7 @@ fn trace(
                     lights,
                     &Vec3::new(0.0, 0.2, 0.4),
                     depth + 1,
+                    max_depth,
                 )
             } else {
                 Vec3::new(0., 0., 0.)
