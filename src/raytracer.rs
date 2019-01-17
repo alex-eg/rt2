@@ -16,8 +16,7 @@ pub struct Ray {
     pub origin: Vec3<f32>,
 }
 
-struct Params
-{
+struct Params {
     max_depth: u8,
     aspect: f32,
     angle: f32,
