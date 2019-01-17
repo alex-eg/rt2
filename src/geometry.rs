@@ -32,7 +32,7 @@ impl Shape {
                 let phit_min = phit - vmin;
                 let phit_max = phit - vmax;
                 let mut nhit = Vec3::zero();
-                let eps = 1e-6;
+                let eps = 1e-3;
                 if phit_min.x.abs() < eps {
                     nhit.x = -1.
                 }
