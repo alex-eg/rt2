@@ -1,4 +1,4 @@
-use crate::Vec3;
+use crate::math::Vec3;
 
 pub trait SetPosition {
     fn set_position(&mut self, pos: Vec3<f32>);

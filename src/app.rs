@@ -7,7 +7,7 @@ use crate::material::Material;
 use crate::object::{new_box, new_sphere, new_square, new_triangle, BoxBuilder, Object};
 use crate::raytracer::march;
 
-use crate::Vec3;
+use crate::math::Vec3;
 
 use sdl2::event::Event;
 use sdl2::pixels::PixelFormatEnum;

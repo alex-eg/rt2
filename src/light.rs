@@ -1,5 +1,5 @@
 use crate::animation::SetPosition;
-use crate::Vec3;
+use crate::math::Vec3;
 
 #[derive(Clone, Copy)]
 pub struct Light {

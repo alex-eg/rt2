@@ -1,4 +1,4 @@
-use crate::Vec3;
+use crate::math::Vec3;
 
 use std::collections::HashSet;
 

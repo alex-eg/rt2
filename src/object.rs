@@ -1,7 +1,7 @@
 use crate::animation::SetPosition;
 use crate::geometry::Shape;
 use crate::material::Material;
-use crate::Vec3;
+use crate::math::Vec3;
 
 #[derive(Clone)]
 pub struct Object {

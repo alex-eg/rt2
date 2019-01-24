@@ -4,7 +4,7 @@ use crate::light::Light;
 use crate::object::Object;
 use crate::surface::{Division, Surface};
 use crate::material::Hit;
-use crate::Vec3;
+use crate::math::Vec3;
 
 use num_cpus;
 use scoped_threadpool::Pool;

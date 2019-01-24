@@ -6,13 +6,13 @@ mod geometry;
 mod input;
 mod light;
 mod material;
+mod math;
 mod object;
 mod raytracer;
 mod resource;
 mod surface;
 
 use nalgebra as na;
-use self::na::Vector3 as Vec3;
 
 fn main() {
     self::app::run()

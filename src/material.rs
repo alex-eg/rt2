@@ -1,6 +1,6 @@
 use crate::light::Light;
 use crate::raytracer::Ray;
-use crate::Vec3;
+use crate::math::Vec3;
 
 #[derive(Clone, Copy)]
 pub struct Material {

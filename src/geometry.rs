@@ -1,5 +1,5 @@
 use crate::raytracer::Ray;
-use crate::Vec3;
+use crate::math::Vec3;
 
 use num::traits::Zero;
 use std::f32::INFINITY;
