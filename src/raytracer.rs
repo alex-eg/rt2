@@ -4,7 +4,7 @@ use crate::light::Light;
 use crate::object::Object;
 use crate::surface::{Division, Surface};
 use crate::material::Hit;
-use crate::math::Vec3;
+use crate::math::Vec3f;
 
 use num_cpus;
 use scoped_threadpool::Pool;
@@ -12,8 +12,8 @@ use scoped_threadpool::Pool;
 use std::f32::INFINITY;
 
 pub struct Ray {
-    pub dir: Vec3<f32>,
-    pub origin: Vec3<f32>,
+    pub dir: Vec3f,
+    pub origin: Vec3f,
 }
 
 struct Params {
@@ -22,7 +22,7 @@ struct Params {
     angle: f32,
     inv_width: f32,
     inv_height: f32,
-    right: Vec3<f32>,
+    right: Vec3f,
 }
 
 pub fn march(cam: &Camera, objects: &[Object], lights: &[Light]) -> Vec<u8> {
@@ -54,7 +54,7 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: Divis
     let inv_height = params.inv_height;
     let right = params.right;
 
-    let default_color: Vec3<f32> = Vec3::new(
+    let default_color: Vec3f = Vec3f::new(
         chunk.x0 as f32 / cam.width as f32,
         chunk.y0 as f32 / cam.height as f32,
         0.7,
@@ -92,12 +92,12 @@ fn trace(
     ray: &Ray,
     objects: &[Object],
     lights: &[Light],
-    default_color: &Vec3<f32>,
+    default_color: &Vec3f,
     depth: u8,
     max_depth: u8,
-) -> Vec3<f32> {
+) -> Vec3f {
     if depth > max_depth {
-        return Vec3::new(0.5, 0.5, 0.5);
+        return Vec3f::new(0.5, 0.5, 0.5);
     }
     let (mut tnear, mut tfar) = (INFINITY, INFINITY);
     let mut hit_obj: &Object = &objects[0];
@@ -115,7 +115,7 @@ fn trace(
     }
     let mut color = *default_color;
     if tnear != INFINITY {
-        color = Vec3::new(0., 0., 0.);
+        color = Vec3f::new(0., 0., 0.);
         let nhit = hit_shape.get_normal(ray, tnear);
         let phit = ray.origin + ray.dir * tnear;
         for light in lights {
@@ -142,12 +142,12 @@ fn trace(
                     &reflection_ray,
                     objects,
                     lights,
-                    &Vec3::new(0.0, 0.2, 0.4),
+                    &Vec3f::new(0.0, 0.2, 0.4),
                     depth + 1,
                     max_depth
                 )
             } else {
-                Vec3::new(0., 0., 0.)
+                Vec3f::new(0., 0., 0.)
             };
 
             let refracted_color = if hit_obj.mat.refraction > 0.0 {
@@ -173,12 +173,12 @@ fn trace(
                     &refraction_ray,
                     objects,
                     lights,
-                    &Vec3::new(0.0, 0.2, 0.4),
+                    &Vec3f::new(0.0, 0.2, 0.4),
                     depth + 1,
                     max_depth,
                 )
             } else {
-                Vec3::new(0., 0., 0.)
+                Vec3f::new(0., 0., 0.)
             };
             let h: Hit = Hit { ray, tnear, nhit };
             color += hit_obj.mat.compute_color(

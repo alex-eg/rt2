@@ -1,22 +1,22 @@
-use crate::math::Vec3;
+use crate::math::Vec3f;
 
 pub trait SetPosition {
-    fn set_position(&mut self, pos: Vec3<f32>);
-    fn get_position(&self) -> Vec3<f32>;
+    fn set_position(&mut self, pos: Vec3f);
+    fn get_position(&self) -> Vec3f;
 }
 
 pub struct Animation {
     path_lengts: Vec<f32>,
-    control_points: Vec<Vec3<f32>>,
+    control_points: Vec<Vec3f>,
     current: f32,
     i: usize,
-    dir: Vec3<f32>,
+    dir: Vec3f,
     pub dirty: bool,
     factor: f32,
 }
 
 impl Animation {
-    pub fn new<T: SetPosition>(object: &T, path: &[Vec3<f32>]) -> Animation {
+    pub fn new<T: SetPosition>(object: &T, path: &[Vec3f]) -> Animation {
         let mut control_points = Vec::new();
         let pos = object.get_position();
         control_points.push(pos);
@@ -25,7 +25,7 @@ impl Animation {
             acc + p
         });
         let mut path_lengts: Vec<f32> = path.iter().map(|p| p.norm()).collect();
-        let lastpath = &path.iter().fold(Vec3::new(0., 0., 0.), |acc, p| acc + p);
+        let lastpath = &path.iter().fold(Vec3f::new(0., 0., 0.), |acc, p| acc + p);
         path_lengts.push(lastpath.norm());
         let dir = control_points[1] - pos;
         Animation {

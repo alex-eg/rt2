@@ -1,12 +1,12 @@
 use crate::light::Light;
 use crate::raytracer::Ray;
-use crate::math::Vec3;
+use crate::math::Vec3f;
 
 #[derive(Clone, Copy)]
 pub struct Material {
-    pub ambient: Vec3<f32>,
-    pub diffuse: Vec3<f32>,
-    pub specular: Vec3<f32>,
+    pub ambient: Vec3f,
+    pub diffuse: Vec3f,
+    pub specular: Vec3f,
     pub shininess: f32,
     pub reflection: f32,
     pub refraction: f32,
@@ -15,7 +15,7 @@ pub struct Material {
 pub struct Hit<'a> {
     pub ray: &'a Ray,
     pub tnear: f32,
-    pub nhit: Vec3<f32>,
+    pub nhit: Vec3f,
 }
 
 fn max(a: f32, b: f32) -> f32 {
@@ -26,7 +26,7 @@ fn max(a: f32, b: f32) -> f32 {
     }
 }
 
-fn clamp(f: Vec3<f32>) -> Vec3<f32> {
+fn clamp(f: Vec3f) -> Vec3f {
     let mut h = f;
     h.x = if f.x > 1.0 { 1.0 } else { f.x };
     h.y = if f.y > 1.0 { 1.0 } else { f.y };
@@ -39,12 +39,12 @@ impl Material {
         &self,
         hit: &Hit,
         light: &Light,
-        reflected_color: Vec3<f32>,
-        refracted_color: Vec3<f32>,
+        reflected_color: Vec3f,
+        refracted_color: Vec3f,
         light_shaded: bool,
-    ) -> Vec3<f32> {
-        let mul = |l: &Vec3<f32>, r: &Vec3<f32>| -> Vec3<f32> {
-            Vec3::new(l.x * r.x, l.y * r.y, l.z * r.z)
+    ) -> Vec3f {
+        let mul = |l: &Vec3f, r: &Vec3f| -> Vec3f {
+            Vec3f::new(l.x * r.x, l.y * r.y, l.z * r.z)
         };
 
         let ray = hit.ray;

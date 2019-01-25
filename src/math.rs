@@ -1,9 +1,4 @@
-use std::fmt::Debug;
+type FloatType = f32;
 
-#[derive(Clone, Copy)]
-pub struct Vec3<T: Eq + Copy + Debug + Clone> {
-    vec: nalgebra::Vector3<T>,
-    x: T,
-    y: T,
-    z: T,
-}
+pub use crate::na::Vector3 as Vec3;
+pub type Vec3f = Vec3<FloatType>;

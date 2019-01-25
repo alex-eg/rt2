@@ -1,5 +1,5 @@
 use crate::na::{clamp, Rotation3 as Rot3, Unit};
-use crate::math::Vec3;
+use crate::math::Vec3f;
 
 use num::traits::Zero;
 
@@ -12,12 +12,12 @@ struct Rotate {
 #[derive(Debug, Clone, Copy)]
 pub struct Camera {
     /// Camera eye position
-    pub eye: Vec3<f32>,
+    pub eye: Vec3f,
 
     /// Camera view direction vector
-    pub dir: Vec3<f32>,
+    pub dir: Vec3f,
 
-    pub up: Vec3<f32>,
+    pub up: Vec3f,
     pub fov: f32,
     pub width: u32,
     pub height: u32,
@@ -27,12 +27,12 @@ pub struct Camera {
 
 pub struct CamBuilder {
     /// Camera eye position
-    eye: Vec3<f32>,
+    eye: Vec3f,
 
     /// Point to which camera looks at
-    center: Vec3<f32>,
+    center: Vec3f,
 
-    up: Vec3<f32>,
+    up: Vec3f,
     fov: f32,
     width: u32,
     height: u32,
@@ -41,9 +41,9 @@ pub struct CamBuilder {
 impl CamBuilder {
     pub fn new() -> CamBuilder {
         CamBuilder {
-            eye: Vec3::zero(),
-            center: Vec3::zero(),
-            up: Vec3::zero(),
+            eye: Vec3f::zero(),
+            center: Vec3f::zero(),
+            up: Vec3f::zero(),
 
             fov: 0.0,
             width: 0,
@@ -51,17 +51,17 @@ impl CamBuilder {
         }
     }
 
-    pub fn eye(&mut self, eye: Vec3<f32>) -> &mut CamBuilder {
+    pub fn eye(&mut self, eye: Vec3f) -> &mut CamBuilder {
         self.eye = eye;
         self
     }
 
-    pub fn center(&mut self, center: Vec3<f32>) -> &mut CamBuilder {
+    pub fn center(&mut self, center: Vec3f) -> &mut CamBuilder {
         self.center = center;
         self
     }
 
-    pub fn up(&mut self, up: Vec3<f32>) -> &mut CamBuilder {
+    pub fn up(&mut self, up: Vec3f) -> &mut CamBuilder {
         self.up = up;
         self
     }
@@ -83,7 +83,7 @@ impl CamBuilder {
 
     pub fn build(&self) -> Camera {
         let dir = self.center - self.eye;
-        let y = Vec3::new(0.0, 0.0, 1.0).dot(&dir).acos().to_degrees();
+        let y = Vec3f::new(0.0, 0.0, 1.0).dot(&dir).acos().to_degrees();
         Camera {
             eye: self.eye,
             dir,
@@ -116,15 +116,15 @@ impl Camera {
 
     pub fn update(&mut self) {
         let rot_x = Rot3::from_axis_angle(
-            &Unit::new_normalize(Vec3::new(1.0, 0.0, 0.0)),
+            &Unit::new_normalize(Vec3f::new(1.0, 0.0, 0.0)),
             self.angles.x.to_radians(),
         );
         let rot_y = Rot3::from_axis_angle(
-            &Unit::new_normalize(Vec3::new(0.0, 1.0, 0.0)),
+            &Unit::new_normalize(Vec3f::new(0.0, 1.0, 0.0)),
             self.angles.y.to_radians(),
         );
-        self.dir = rot_y * rot_x * Vec3::new(0.0, 0.0, 1.0);
-        self.up = rot_y * rot_x * Vec3::new(0.0, -1.0, 0.0);
+        self.dir = rot_y * rot_x * Vec3f::new(0.0, 0.0, 1.0);
+        self.up = rot_y * rot_x * Vec3f::new(0.0, -1.0, 0.0);
     }
 
     pub fn mov_fwd(&mut self, dist: f32) {

@@ -1,4 +1,4 @@
-use crate::math::Vec3;
+use crate::math::Vec3f;
 
 use std::collections::HashSet;
 
@@ -78,7 +78,7 @@ impl Surface {
 }
 
 impl<'a> Division<'a> {
-    pub fn set_color(&self, x: u32, y: u32, color: Vec3<f32>) {
+    pub fn set_color(&self, x: u32, y: u32, color: Vec3f) {
         let offset = ((y * self.surf.w + x) * 3) as usize;
         let pixels = &self.surf.pixels as *const Vec<u8> as *mut Vec<u8>;
         unsafe {

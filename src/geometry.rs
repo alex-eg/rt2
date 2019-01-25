@@ -1,4 +1,5 @@
 use crate::raytracer::Ray;
+use crate::math::Vec3f;
 use crate::math::Vec3;
 
 use num::traits::Zero;
@@ -8,30 +9,30 @@ use std::f32::INFINITY;
 pub enum Shape {
     Sphere {
         radius: f32,
-        center: Vec3<f32>,
+        center: Vec3f,
     },
 
     Box {
-        vmin: Vec3<f32>,
-        vmax: Vec3<f32>,
+        vmin: Vec3f,
+        vmax: Vec3f,
     },
 
     Triangle {
-        a: Vec3<f32>,
-        b: Vec3<f32>,
-        c: Vec3<f32>,
+        a: Vec3f,
+        b: Vec3f,
+        c: Vec3f,
     },
 }
 
 impl Shape {
-    pub fn get_normal(&self, ray: &Ray, tnear: f32) -> Vec3<f32> {
+    pub fn get_normal(&self, ray: &Ray, tnear: f32) -> Vec3f {
         match *self {
             Shape::Box { vmin, vmax } => {
                 let phit = ray.origin + ray.dir * tnear;
 
                 let phit_min = phit - vmin;
                 let phit_max = phit - vmax;
-                let mut nhit = Vec3::zero();
+                let mut nhit = Vec3f::zero();
                 let eps = 1e-3;
                 if phit_min.x.abs() < eps {
                     nhit.x = -1.
