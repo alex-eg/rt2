@@ -4,7 +4,7 @@ use crate::fps_counter::FpsCounter;
 use crate::input::InputHandler;
 use crate::light::Light;
 use crate::material::Material;
-use crate::object::{new_box, new_sphere, new_square, new_triangle, BoxBuilder, Object};
+use crate::object::{new_box, new_sphere, new_square, new_triangle, CuboidBuilder, Object};
 use crate::raytracer::march;
 
 use crate::math::Vec3f;
@@ -109,7 +109,7 @@ pub fn run() {
         Vec3f::new(10., 10., 0.),
         blue,
     );
-    let small_tree = BoxBuilder::new()
+    let small_tree = CuboidBuilder::new()
         .add(10, 20, 0, 1)
         .add(10, 19, 0, 1)
         .add(10, 18, 1, 1)
