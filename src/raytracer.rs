@@ -79,7 +79,7 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: Divis
     }
 }
 
-fn hit(ray: &Ray, shape: &Shape) -> (f32, f32) {
+fn hit(ray: &Ray, shape: &Box<Shape>) -> (f32, f32) {
     let (t0, t1) = shape.intersect(ray);
     if t0 < 0. {
         (t1, t0)
@@ -100,15 +100,15 @@ fn trace(
         return Vec3f::new(0.5, 0.5, 0.5);
     }
     let (mut tnear, mut tfar) = (INFINITY, INFINITY);
-    let mut hit_obj: &Object = &objects[0];
-    let mut hit_shape: &Shape = &hit_obj.shapes[0];
+    let mut hit_obj = &objects[0];
+    let mut hit_shape = &hit_obj.shapes[0];
     for obj in objects {
         for shape in obj.shapes.iter() {
             let (t1, t2) = hit(ray, shape);
             if t1 < tnear {
                 tnear = t1;
                 tfar = t2;
-                hit_shape = &shape;
+                hit_shape = shape;
                 hit_obj = &obj;
             }
         }
@@ -160,7 +160,7 @@ fn trace(
                     origin: phit + nhit * 0.001,
                     dir: ray.dir + nhit * dot_in * factor_in,
                 };
-                let (_, tfar_in) = hit(&ray_in, hit_shape);
+                let (_, tfar_in) = hit(&ray_in, &hit_shape);
                 let nhit_in = hit_shape.get_normal(&ray_in, tfar);
 
                 let dot_out = nhit_in.dot(&ray_in.dir);
