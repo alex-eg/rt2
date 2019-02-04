@@ -1,7 +1,7 @@
 use crate::animation::SetPosition;
 use crate::geometry::{Shape, Sphere, Cuboid, Triangle};
 use crate::material::Material;
-use crate::math::{Vec3f, Mat4f};
+use crate::math::{Vec3f, Mat4f, translation, set_translation};
 
 pub struct Object {
     pub name: String,
@@ -12,32 +12,33 @@ pub struct Object {
 
 impl SetPosition for Object {
     fn set_position(&mut self, pos: Vec3f) {
-        self.transform[(0, 3)] = pos.x;
-        self.transform[(1, 3)] = pos.y;
-        self.transform[(2, 3)] = pos.z;
+        set_translation(&mut self.transform, pos);
     }
 
     fn get_position(&self) -> Vec3f {
-        let slice = self.transform.column(3);
-        Vec3f::new(slice[0], slice[1], slice[2])
+        translation(&self.transform)
     }
 }
 
 pub fn new_sphere(name: &str, center: Vec3f, radius: f32, mat: Material) -> Object {
+    let mut t = Mat4f::identity();
+    set_translation(&mut t, center);
     Object {
         name: name.to_string(),
-        shapes: vec![Box::new(Sphere { center, radius })],
+        shapes: vec![Box::new(Sphere { radius })],
         mat,
-        transform: Mat4f::identity(),
+        transform: t,
     }
 }
 
 pub fn new_box(name: &str, vmin: Vec3f, vmax: Vec3f, mat: Material) -> Object {
+    let mut t = Mat4f::identity();
+    set_translation(&mut t, vmin);
     Object {
         name: name.to_string(),
-        shapes: vec![Box::new(Cuboid { vmin, vmax })],
+        shapes: vec![Box::new(Cuboid { extent: vmax })],
         mat,
-        transform: Mat4f::identity(),
+        transform: t,
     }
 }
 
@@ -64,34 +65,5 @@ pub fn new_square(name: &str, center: Vec3f, size: u16, mat: Material) -> Object
         ],
         mat,
         transform: Mat4f::identity(),
-    }
-}
-
-pub struct CuboidBuilder {
-    boxes: Vec<Box<dyn Shape>>,
-}
-
-impl CuboidBuilder {
-    pub fn new() -> CuboidBuilder {
-        CuboidBuilder { boxes: Vec::new() }
-    }
-
-    pub fn add(mut self, x: i32, y: i32, z: i32, size: i32) -> CuboidBuilder {
-        assert!(size > 0);
-        let new_box = Cuboid {
-            vmin: Vec3f::new(x as f32, y as f32, z as f32),
-            vmax: Vec3f::new((x + size) as f32, (y + size) as f32, (z + size) as f32),
-        };
-        self.boxes.push(Box::new(new_box));
-        self
-    }
-
-    pub fn build(self, name: &str, mat: Material) -> Object {
-        Object {
-            name: name.to_string(),
-            shapes: self.boxes,
-            mat,
-            transform: Mat4f::identity(),
-        }
     }
 }

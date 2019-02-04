@@ -1,27 +1,23 @@
 use crate::raytracer::Ray;
-use crate::animation::SetPosition;
 
-use crate::math::Vec3f;
-use crate::math::Vec3;
+use crate::math::{Vec3f, Vec3, Mat4f, translation};
 
 use num::traits::Zero;
 use std::f32::INFINITY;
 
 pub trait Shape: Send + Sync {
-    fn get_normal(&self, ray: &Ray, tnear: f32) -> Vec3f;
-    fn intersect(&self, ray: &Ray) -> (f32, f32);
+    fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f;
+    fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32);
 }
 
 #[derive(Clone, Copy)]
 pub struct Sphere {
     pub radius: f32,
-    pub center: Vec3f,
 }
 
 #[derive(Clone, Copy)]
 pub struct Cuboid {
-    pub vmin: Vec3f,
-    pub vmax: Vec3f,
+    pub extent: Vec3f,
 }
 
 #[derive(Clone, Copy)]
@@ -32,9 +28,9 @@ pub struct Triangle {
 }
 
 impl Shape for Cuboid {
-    fn get_normal(&self, ray: &Ray, tnear: f32) -> Vec3f {
-        let vmin = self.vmin;
-        let vmax = self.vmax;
+    fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f {
+        let vmin = translation(transform);
+        let vmax = vmin + self.extent;
         let phit = ray.origin + ray.dir * tnear;
 
         let phit_min = phit - vmin;
@@ -62,7 +58,7 @@ impl Shape for Cuboid {
         nhit
     }
 
-    fn intersect(&self, ray: &Ray) -> (f32, f32) {
+    fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32) {
         let (mut t0, t1) = (INFINITY, INFINITY);
         let o = ray.origin;
         let mut d = ray.dir;
@@ -76,8 +72,8 @@ impl Shape for Cuboid {
         sign.y = d.y > 0.;
         sign.z = d.z > 0.;
 
-        let b0 = self.vmin;
-        let b1 = self.vmax;
+        let b0 = translation(transform);
+        let b1 = b0 + self.extent;
 
         let mut tmin = (if sign.x { b0.x } else { b1.x } - o.x) * d.x;
         let mut tmax = (if sign.x { b1.x } else { b0.x } - o.x) * d.x;
@@ -120,23 +116,9 @@ impl Shape for Cuboid {
     }
 }
 
-impl SetPosition for Cuboid {
-    fn set_position(&mut self, pos: Vec3f)
-    {
-        let d = self.vmax - self.vmin;
-        self.vmin = pos;
-        self.vmax = pos + d;
-    }
-
-    fn get_position(&self) -> Vec3f
-    {
-        self.vmin
-    }
-}
-
 impl Shape for Sphere {
-    fn get_normal(&self, ray: &Ray, tnear: f32) -> Vec3f {
-        let center = self.center;
+    fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f {
+        let center = translation(transform);
         let phit = ray.origin + ray.dir * tnear;
         let mut nhit = (phit - center).normalize();
         if ray.dir.dot(&nhit) > 0. {
@@ -145,9 +127,9 @@ impl Shape for Sphere {
         nhit
     }
 
-    fn intersect(&self, ray: &Ray) -> (f32, f32) {
+    fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32) {
         let (mut t0, mut t1) = (INFINITY, INFINITY);
-        let l = self.center - ray.origin;
+        let l = translation(transform) - ray.origin;
         let tca = l.dot(&ray.dir);
         if tca < 0. {
             return (t0, t1);
@@ -164,21 +146,12 @@ impl Shape for Sphere {
     }
 }
 
-impl SetPosition for Sphere {
-    fn set_position(&mut self, pos: Vec3f) {
-        self.center = pos;
-    }
-
-    fn get_position(&self) -> Vec3f {
-        self.center
-    }
-}
-
 impl Shape for Triangle {
-    fn get_normal(&self, ray: &Ray, tnear: f32) -> Vec3f {
+    fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f {
         let t = ray.origin + ray.dir * tnear;
-        let edge_0 = t - self.a;
-        let edge_1 = t - self.b;
+        let origin = translation(transform);
+        let edge_0 = t - self.a + origin;
+        let edge_1 = t - self.b + origin;
         let mut nhit = edge_1.cross(&edge_0).normalize();
         if ray.dir.dot(&nhit) > 0. {
             nhit = -nhit;
@@ -186,10 +159,11 @@ impl Shape for Triangle {
         nhit
     }
 
-    fn intersect(&self, ray: &Ray) -> (f32, f32) {
+    fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32) {
         let (t0, t1) = (INFINITY, INFINITY);
-        let edge_0 = self.b - self.a;
-        let edge_1 = self.c - self.a;
+        let origin = translation(transform);
+        let edge_0 = self.b - self.a + origin;
+        let edge_1 = self.c - self.a + origin;
         let h = ray.dir.cross(&edge_1);
 
         let dot = edge_0.dot(&h);
@@ -198,7 +172,7 @@ impl Shape for Triangle {
         }
 
         let dot_r = 1. / dot;
-        let s = ray.origin - self.a;
+        let s = ray.origin - self.a + origin;
         let u = dot_r * s.dot(&h);
         if u < 0. || u > 1. {
             return (t0, t1);
@@ -216,14 +190,5 @@ impl Shape for Triangle {
         } else {
             (t0, t1)
         }
-    }
-}
-
-impl SetPosition for Triangle {
-    fn set_position(&mut self, _pos: Vec3f) {
-    }
-
-    fn get_position(&self) -> Vec3f {
-        Vec3::new(0., 0., 0.)
     }
 }

@@ -4,7 +4,7 @@ use crate::light::Light;
 use crate::object::Object;
 use crate::surface::{Division, Surface};
 use crate::material::Hit;
-use crate::math::Vec3f;
+use crate::math::{Vec3f, Mat4f};
 
 use num_cpus;
 use scoped_threadpool::Pool;
@@ -79,8 +79,8 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: Divis
     }
 }
 
-fn hit(ray: &Ray, shape: &Box<Shape>) -> (f32, f32) {
-    let (t0, t1) = shape.intersect(ray);
+fn hit(ray: &Ray, transform: &Mat4f, shape: &Box<Shape>) -> (f32, f32) {
+    let (t0, t1) = shape.intersect(transform, ray);
     if t0 < 0. {
         (t1, t0)
     } else {
@@ -104,7 +104,7 @@ fn trace(
     let mut hit_shape = &hit_obj.shapes[0];
     for obj in objects {
         for shape in obj.shapes.iter() {
-            let (t1, t2) = hit(ray, shape);
+            let (t1, t2) = hit(ray, &obj.transform, shape);
             if t1 < tnear {
                 tnear = t1;
                 tfar = t2;
@@ -116,7 +116,7 @@ fn trace(
     let mut color = *default_color;
     if tnear != INFINITY {
         color = Vec3f::new(0., 0., 0.);
-        let nhit = hit_shape.get_normal(ray, tnear);
+        let nhit = hit_shape.get_normal(&hit_obj.transform, ray, tnear);
         let phit = ray.origin + ray.dir * tnear;
         for light in lights {
             let mut light_shaded = false;
@@ -126,7 +126,7 @@ fn trace(
                         origin: phit + nhit * 0.001,
                         dir: (light.pos - phit).normalize(),
                     };
-                    let (t1, _) = hit(&shadow_ray, shape);
+                    let (t1, _) = hit(&shadow_ray, &obj.transform, shape);
                     if t1 != INFINITY {
                         light_shaded = true;
                         break 'shade;
@@ -160,8 +160,8 @@ fn trace(
                     origin: phit + nhit * 0.001,
                     dir: ray.dir + nhit * dot_in * factor_in,
                 };
-                let (_, tfar_in) = hit(&ray_in, &hit_shape);
-                let nhit_in = hit_shape.get_normal(&ray_in, tfar);
+                let (_, tfar_in) = hit(&ray_in, &hit_obj.transform, &hit_shape);
+                let nhit_in = hit_shape.get_normal(&hit_obj.transform, &ray_in, tfar);
 
                 let dot_out = nhit_in.dot(&ray_in.dir);
                 let factor_out = (-n2 * n2 / (dot_out * dot_out) + 1.).sqrt() - 1.;
