@@ -92,7 +92,7 @@ pub fn run() {
     let mut box1 = new_box(
         "b1",
         Vec3f::new(10., 10., -20.),
-        Vec3f::new(20., 20., -10.),
+        Vec3f::new(10., 10., 10.),
         red,
     );
     let mut sphere3 = new_sphere("s5", Vec3f::new(-15., 15., 15.), 5., blue);
