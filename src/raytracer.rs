@@ -5,6 +5,7 @@ use crate::object::Object;
 use crate::surface::{Division, Surface};
 use crate::material::Hit;
 use crate::math::{Vec3f, Mat4f};
+use crate::scene::Scene;
 
 use num_cpus;
 use scoped_threadpool::Pool;
@@ -25,7 +26,9 @@ struct Params {
     right: Vec3f,
 }
 
-pub fn march(cam: &Camera, objects: &[Object], lights: &[Light]) -> Vec<u8> {
+pub fn march(cam: &Camera, scene: &Scene) -> Vec<u8> {
+    let objects = &scene.objects;
+    let lights = &scene.lights;
     let mut pool = Pool::new(num_cpus::get() as u32);
     let surf = Surface::new(cam.width, cam.height);
 

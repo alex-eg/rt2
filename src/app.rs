@@ -6,6 +6,7 @@ use crate::light::Light;
 use crate::material::Material;
 use crate::object::{new_box, new_sphere, new_square, new_triangle, Object};
 use crate::raytracer::march;
+use crate::scene::Scene;
 
 use crate::math::Vec3f;
 
@@ -84,23 +85,23 @@ pub fn run() {
         .up(Vec3f::new(0., -1., 0.))
         .build();
 
-    let sphere1 = new_sphere("s1", Vec3f::new(15., 15., 15.), 5., green);
-    let box1 = new_box(
+    let mut sphere1 = new_sphere("s1", Vec3f::new(15., 15., 15.), 5., green);
+    let mut box1 = new_box(
         "b1",
         Vec3f::new(10., 10., -20.),
         Vec3f::new(20., 20., -10.),
         red,
     );
-    let sphere3 = new_sphere("s5", Vec3f::new(-15., 15., 15.), 5., blue);
-    let sphere4 = new_sphere("s6", Vec3f::new(-15., 15., -15.), 5., red);
+    let mut sphere3 = new_sphere("s5", Vec3f::new(-15., 15., 15.), 5., blue);
+    let mut sphere4 = new_sphere("s6", Vec3f::new(-15., 15., -15.), 5., red);
     let sphere5 = new_sphere("s3", Vec3f::new(15., -15., 15.), 5., green);
     let sphere6 = new_sphere("s4", Vec3f::new(15., -15., -15.), 5., blue);
     let sphere7 = new_sphere("s7", Vec3f::new(-15., -15., 15.), 5., red);
     let sphere8 = new_sphere("s8", Vec3f::new(-15., -15., -15.), 5., green);
-    let mut a1 = Animation::new(&sphere1, &[Vec3f::new(0., -10., 0.)]);
-    let mut a2 = Animation::new(&box1, &[Vec3f::new(0., 7., 0.)]);
-    let mut a3 = Animation::new(&sphere3, &[Vec3f::new(0., -8., 0.)]);
-    let mut a4 = Animation::new(&sphere4, &[Vec3f::new(0., 5., 0.)]);
+    sphere1.set_animation(Animation::new(&sphere1, &[Vec3f::new(0., -10., 0.)]));
+    box1.set_animation(Animation::new(&box1, &[Vec3f::new(0., 7., 0.)]));
+    sphere3.set_animation(Animation::new(&sphere3, &[Vec3f::new(0., -8., 0.)]));
+    sphere4.set_animation(Animation::new(&sphere4, &[Vec3f::new(0., 5., 0.)]));
 
     let triangle = new_triangle(
         "tri1",
@@ -110,7 +111,7 @@ pub fn run() {
         blue,
     );
 
-    let mut objects: Vec<Object> = vec![
+    let objects: Vec<Object> = vec![
         sphere1,
         box1,
         sphere3,
@@ -128,6 +129,8 @@ pub fn run() {
         color: Vec3f::new(1., 1., 1.),
     };
     let lights: Vec<Light> = vec![light1];
+
+    let mut scene: Scene = Scene{ objects: objects, lights: lights };
 
     canvas.clear();
     canvas.present();
@@ -149,12 +152,9 @@ pub fn run() {
         }
         input_handler.update(&mut camera);
         fps.update();
-        a1.update(&mut objects[0]);
-        a2.update(&mut objects[1]);
-        a3.update(&mut objects[2]);
-        a4.update(&mut objects[3]);
-        if first || input_handler.dirty || a1.dirty || a2.dirty || a3.dirty || a4.dirty {
-            let updated = march(&camera, &objects, &lights);
+        scene.update_objects();
+        if first || input_handler.dirty {
+            let updated = march(&camera, &scene);
             pixels[..updated.len()].clone_from_slice(&updated[..]);
             let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
             first = false;

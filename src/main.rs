@@ -11,6 +11,7 @@ mod object;
 mod raytracer;
 mod resource;
 mod surface;
+mod scene;
 
 use nalgebra as na;
 

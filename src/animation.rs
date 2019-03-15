@@ -1,4 +1,5 @@
 use crate::math::Vec3f;
+use crate::na::zero;
 
 pub trait SetPosition {
     fn set_position(&mut self, pos: Vec3f);
@@ -39,7 +40,7 @@ impl Animation {
         }
     }
 
-    pub fn update<T: SetPosition>(&mut self, object: &mut T) {
+    pub fn update(&mut self) -> Vec3f {
         self.dirty = true;
         self.current -= self.factor;
         if self.current < 0. {
@@ -50,12 +51,13 @@ impl Animation {
             self.current = self.path_lengts[self.i];
             if self.i + 1 == self.path_lengts.len() {
                 self.dir = self.control_points[0] - self.control_points[self.i];
+                zero()
             } else {
                 self.dir = self.control_points[self.i + 1] - self.control_points[self.i];
+                zero()
             }
         } else {
-            let pos = object.get_position() + self.dir.normalize() * self.factor;
-            object.set_position(pos);
+            self.dir.normalize() * self.factor
         }
     }
 }
