@@ -1,7 +1,9 @@
 use crate::animation::SetPosition;
 use crate::math::Vec3f;
 
-#[derive(Clone, Copy)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Light {
     pub pos: Vec3f,
     pub color: Vec3f,

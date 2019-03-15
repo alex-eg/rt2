@@ -1,8 +1,9 @@
 use crate::light::Light;
 use crate::raytracer::Ray;
 use crate::math::Vec3f;
+use serde::{Serialize, Deserialize};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Material {
     pub ambient: Vec3f,
     pub diffuse: Vec3f,

@@ -4,6 +4,9 @@ use crate::material::Material;
 use crate::math::{Vec3f, Mat4f, translation, set_translation};
 use crate::animation::Animation;
 
+use serde::{Serialize};
+
+#[derive(Serialize)]
 pub struct Object {
     pub name: String,
     pub shapes: Vec<Box<dyn Shape>>,

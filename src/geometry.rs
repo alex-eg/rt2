@@ -5,22 +5,28 @@ use crate::math::{Vec3f, Vec3, Mat4f, translation};
 use num::traits::Zero;
 use std::f32::INFINITY;
 
-pub trait Shape: Send + Sync {
+use serde::{Serialize, Deserialize};
+
+use erased_serde::{serialize_trait_object, __internal_serialize_trait_object};
+
+pub trait Shape : Send + Sync + erased_serde::Serialize {
     fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f;
     fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32);
 }
 
-#[derive(Clone, Copy)]
+serialize_trait_object!(Shape);
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Sphere {
     pub radius: f32,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Cuboid {
     pub extent: Vec3f,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Triangle {
     pub a: Vec3f,
     pub b: Vec3f,

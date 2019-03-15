@@ -1,18 +1,29 @@
 use crate::math::Vec3f;
 use crate::na::zero;
+use serde::{Serialize, Deserialize};
 
 pub trait SetPosition {
     fn set_position(&mut self, pos: Vec3f);
     fn get_position(&self) -> Vec3f;
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct Animation {
     path_lengts: Vec<f32>,
     control_points: Vec<Vec3f>,
+
+    #[serde(skip)]
     current: f32,
+
+    #[serde(skip)]
     i: usize,
+
+    #[serde(skip, default = "zero")]
     dir: Vec3f,
+
+    #[serde(skip)]
     pub dirty: bool,
+
     factor: f32,
 }
 
