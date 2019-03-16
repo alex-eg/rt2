@@ -23,6 +23,8 @@ const CAM_HEIGHT: u32 = 480;
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 768;
 
+use ron::ser::{to_string_pretty, PrettyConfig};
+
 pub fn run() {
     let context = sdl2::init().unwrap();
     let video = context.video().unwrap();
@@ -131,6 +133,9 @@ pub fn run() {
     let lights: Vec<Light> = vec![light1];
 
     let mut scene: Scene = Scene{ objects: objects, lights: lights };
+
+    let s = to_string_pretty(&scene, PrettyConfig::default()).unwrap();
+    println!("{}", s);
 
     canvas.clear();
     canvas.present();

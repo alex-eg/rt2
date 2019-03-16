@@ -13,6 +13,7 @@ scoped_threadpool = "0.1.*"
 time = "0.1.40"
 serde = { version = "1.0", features = ["derive"] }
 erased-serde = "0.3"
+ron = "0.4"
 
 [dependencies.sdl2]
 version = "0.31.0"
