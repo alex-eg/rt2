@@ -153,7 +153,7 @@ pub fn run() {
         input_handler.update(&mut camera);
         fps.update();
         scene.update_objects();
-        if first || input_handler.dirty {
+        if first || input_handler.dirty || scene.any_animation_dirty() {
             let updated = march(&camera, &scene);
             pixels[..updated.len()].clone_from_slice(&updated[..]);
             let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);

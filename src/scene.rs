@@ -15,4 +15,14 @@ impl Scene {
             obj.update_animation();
         }
     }
+
+    pub fn any_animation_dirty(&self) -> bool {
+        for o in &self.objects {
+            match &o.animation {
+                Some(a) => if a.dirty == true { return true },
+                None => {}
+            }
+        }
+        false
+    }
 }
