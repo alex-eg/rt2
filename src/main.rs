@@ -12,6 +12,7 @@ mod raytracer;
 mod resource;
 mod surface;
 mod scene;
+mod font;
 
 use nalgebra as na;
 

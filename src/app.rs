@@ -29,7 +29,8 @@ pub fn run() {
     let context = sdl2::init().unwrap();
     let video = context.video().unwrap();
     let res = crate::resource::ResourceLoader::new();
-    let font = res.load_font("~res:fonts/courier_code.ttf", 16);
+    let font_manager = crate::font::FontManager::new();
+    let font = font_manager.load(&res, "~res:fonts/courier_code.ttf", 16);
     println!("Num of cpus: {}", num_cpus::get());
     let window = video
         .window("demo window", WIDTH, HEIGHT)
