@@ -164,6 +164,8 @@ pub fn run() {
         }
         canvas.clear();
         canvas.copy(&texture, None, None).unwrap();
+
+        // Text rendering
         let white = sdl2::pixels::Color {
             r: 255,
             g: 255,
