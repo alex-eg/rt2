@@ -36,7 +36,10 @@ pub fn run() {
         .build()
         .unwrap();
 
-    let mut canvas = window.into_canvas().build().unwrap();
+    let mut canvas = window.into_canvas()
+        .accelerated()
+        .build()
+        .unwrap();
     let tex_creator = canvas.texture_creator();
     let mut texture = tex_creator
         .create_texture(
