@@ -14,9 +14,6 @@ use sdl2::event::Event;
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::render::TextureAccess;
 
-use std::thread;
-use std::time::Duration;
-
 const CAM_WIDTH: u32 = 640;
 const CAM_HEIGHT: u32 = 480;
 
@@ -181,6 +178,5 @@ pub fn run() {
         let f_tex = tex_creator.create_texture_from_surface(&f_surf).unwrap();
         canvas.copy(&f_tex, None, f_rect).unwrap();
         canvas.present();
-        thread::sleep(Duration::from_millis(10));
     }
 }
