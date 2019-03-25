@@ -44,7 +44,7 @@ pub fn run() {
     let mut texture = tex_creator
         .create_texture(
             PixelFormatEnum::RGB24,
-            TextureAccess::Static,
+            TextureAccess::Streaming,
             CAM_WIDTH,
             CAM_HEIGHT,
         )
