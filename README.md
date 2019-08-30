@@ -1,6 +1,6 @@
 Rust real-time raytracer
 ========================
-[![Build Status](https://travis-ci.org/alex-eg/rt2.svg?branch=master)](https://travis-ci.org/alex-eg/rt2) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Build Status](https://travis-ci.com/alex-eg/rt2.svg?branch=master)](https://travis-ci.com/alex-eg/rt2) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ![Fancy!](https://raw.githubusercontent.com/alex-eg/rt2/master/doc/images/rt.png)
 
