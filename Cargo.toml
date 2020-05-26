@@ -8,7 +8,7 @@ edition = "2018"
 num_cpus = "1.8.0"
 num = "0.1.40"
 gl = "0.6.3"
-nalgebra = { version = "0.13.1", features = ["serde-serialize"] }
+nalgebra = { version = "0.21.*", features = ["serde-serialize"] }
 scoped_threadpool = "0.1.*"
 time = "0.1.40"
 serde = { version = "1.0", features = ["derive"] }
