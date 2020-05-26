@@ -82,7 +82,7 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: Divis
     }
 }
 
-fn hit(ray: &Ray, transform: &Mat4f, shape: &Box<Shape>) -> (f32, f32) {
+fn hit(ray: &Ray, transform: &Mat4f, shape: &Box<dyn Shape>) -> (f32, f32) {
     let (t0, t1) = shape.intersect(transform, ray);
     if t0 < 0. {
         (t1, t0)
