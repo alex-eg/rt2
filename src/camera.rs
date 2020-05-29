@@ -3,13 +3,15 @@ use crate::math::Vec3f;
 
 use num::traits::Zero;
 
-#[derive(Debug, Clone, Copy)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 struct Rotate {
     pub x: f32,
     pub y: f32,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct Camera {
     /// Camera eye position
     pub eye: Vec3f,

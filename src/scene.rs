@@ -1,10 +1,12 @@
 use crate::object::Object;
 use crate::light::Light;
+use crate::camera::Camera;
 
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize)]
 pub struct Scene {
+    pub cam: Camera,
     pub objects: Vec<Object>,
     pub lights: Vec<Light>,
 }
