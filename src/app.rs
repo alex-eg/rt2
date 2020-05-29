@@ -41,7 +41,7 @@ pub fn run() {
         )
         .unwrap();
     const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
-    let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
+    let mut pixels: Vec<u8> = vec![0; PIX_SIZE];
 
     let lines = std::fs::read_to_string("src/scene.ron").expect("Can't read scene.ron");
     let mut scene: Scene = ron::de::from_str(&lines).unwrap();
