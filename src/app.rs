@@ -50,7 +50,7 @@ pub fn run() {
         )
         .unwrap();
     const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
-    let mut pixels: [u8; PIX_SIZE] = [0; PIX_SIZE];
+    let mut pixels: Vec<u8> = vec![0; PIX_SIZE];
 
     let red = Material {
         ambient: Vec3f::new(0.1, 0.1, 0.1),
