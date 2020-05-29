@@ -79,7 +79,7 @@ pub fn run() {
         refraction: 0.,
     };
 
-    let mut camera = CamBuilder::new()
+    let camera = CamBuilder::new()
         .eye(Vec3f::new(0., 0., 60.))
         .center(Vec3f::new(0., 0., 59.))
         .fov(30.)
@@ -133,7 +133,7 @@ pub fn run() {
     };
     let lights: Vec<Light> = vec![light1];
 
-    let mut scene: Scene = Scene{ objects: objects, lights: lights };
+    let mut scene: Scene = Scene{ cam: camera, objects: objects, lights: lights };
 
     let s = to_string_pretty(&scene, PrettyConfig::default()).unwrap();
     println!("{}", s);
@@ -153,14 +153,14 @@ pub fn run() {
             match event {
                 Event::Quit { .. } => break 'running,
 
-                _ => input_handler.process(&event, &mut camera, &context),
+                _ => input_handler.process(&event, &mut scene.cam, &context),
             }
         }
-        input_handler.update(&mut camera);
+        input_handler.update(&mut scene.cam);
         fps.update();
         scene.update_objects();
         if first || input_handler.dirty || scene.any_animation_dirty() {
-            let updated = march(&camera, &scene);
+            let updated = march(&scene);
             pixels[..updated.len()].clone_from_slice(&updated[..]);
             let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
             first = false;
