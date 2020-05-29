@@ -4,7 +4,7 @@ use crate::camera::Camera;
 
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Scene {
     pub cam: Camera,
     pub objects: Vec<Object>,

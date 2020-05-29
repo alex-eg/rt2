@@ -1,15 +1,15 @@
 use crate::animation::SetPosition;
-use crate::geometry::{Shape, Sphere, Cuboid, Triangle};
+use crate::geometry::{Geometry, Sphere, Cuboid, Triangle};
 use crate::material::Material;
 use crate::math::{Vec3f, Mat4f, translation, set_translation};
 use crate::animation::Animation;
 
-use serde::{Serialize};
+use serde::{Serialize, Deserialize};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Object {
     pub name: String,
-    pub shapes: Vec<Box<dyn Shape>>,
+    pub shapes: Vec<Geometry>,
     pub mat: Material,
     pub transform: Mat4f,
     pub animation: Option<Animation>,
@@ -48,7 +48,7 @@ pub fn new_sphere(name: &str, center: Vec3f, radius: f32, mat: Material) -> Obje
     set_translation(&mut t, center);
     Object {
         name: name.to_string(),
-        shapes: vec![Box::new(Sphere { radius })],
+        shapes: vec![Geometry::Sphere(Sphere { radius })],
         mat,
         transform: t,
         animation: None,
@@ -61,7 +61,7 @@ pub fn new_box(name: &str, vmin: Vec3f, vmax: Vec3f, mat: Material) -> Object {
     Object {
         name: name.to_string(),
 
-        shapes: vec![Box::new(Cuboid { extent: vmax })],
+        shapes: vec![Geometry::Cuboid(Cuboid { extent: vmax })],
         mat,
         transform: t,
         animation: None,
@@ -71,7 +71,7 @@ pub fn new_box(name: &str, vmin: Vec3f, vmax: Vec3f, mat: Material) -> Object {
 pub fn new_triangle(name: &str, a: Vec3f, b: Vec3f, c: Vec3f, mat: Material) -> Object {
     Object {
         name: name.to_string(),
-        shapes: vec![Box::new(Triangle { a, b, c })],
+        shapes: vec![Geometry::Triangle(Triangle { a, b, c })],
         mat,
         transform: Mat4f::identity(),
         animation: None,
@@ -87,8 +87,8 @@ pub fn new_square(name: &str, center: Vec3f, size: u16, mat: Material) -> Object
     Object {
         name: name.to_string(),
         shapes: vec![
-            Box::new(Triangle { a, b, c }),
-            Box::new(Triangle { a, b: c, c: d }),
+            Geometry::Triangle(Triangle { a, b, c }),
+            Geometry::Triangle(Triangle { a, b: c, c: d }),
         ],
         mat,
         transform: Mat4f::identity(),

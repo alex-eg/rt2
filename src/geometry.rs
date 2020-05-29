@@ -7,14 +7,10 @@ use std::f32::INFINITY;
 
 use serde::{Serialize, Deserialize};
 
-use erased_serde::{serialize_trait_object, __internal_serialize_trait_object};
-
-pub trait Shape : Send + Sync + erased_serde::Serialize {
+pub trait Shape : Send + Sync {
     fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f;
     fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32);
 }
-
-serialize_trait_object!(Shape);
 
 #[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Sphere {
@@ -31,6 +27,34 @@ pub struct Triangle {
     pub a: Vec3f,
     pub b: Vec3f,
     pub c: Vec3f,
+}
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
+pub enum Geometry {
+    Triangle(Triangle),
+    Cuboid(Cuboid),
+    Sphere(Sphere),
+}
+
+impl Shape for Geometry {
+    fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f {
+        use Geometry::*;
+        match *self {
+            Triangle(tri) => tri.get_normal(transform, ray, tnear),
+            Cuboid(cube) => cube.get_normal(transform, ray, tnear),
+            Sphere(sphere) => sphere.get_normal(transform, ray, tnear),
+        }
+    }
+
+    fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32)
+    {
+        use Geometry::*;
+        match *self {
+            Triangle(tri) => tri.intersect(transform, ray),
+            Cuboid(cube) => cube.intersect(transform, ray),
+            Sphere(sphere) => sphere.intersect(transform, ray),
+        }
+    }
 }
 
 impl Shape for Cuboid {

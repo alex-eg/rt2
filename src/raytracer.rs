@@ -1,5 +1,5 @@
 use crate::camera::Camera;
-use crate::geometry::Shape;
+use crate::geometry::{Geometry,Shape};
 use crate::light::Light;
 use crate::object::Object;
 use crate::surface::{Division, Surface};
@@ -83,7 +83,7 @@ fn process_part(cam: &Camera, objects: &[Object], lights: &[Light], chunk: Divis
     }
 }
 
-fn hit(ray: &Ray, transform: &Mat4f, shape: &Box<dyn Shape>) -> (f32, f32) {
+fn hit(ray: &Ray, transform: &Mat4f, shape: &Geometry) -> (f32, f32) {
     let (t0, t1) = shape.intersect(transform, ray);
     if t0 < 0. {
         (t1, t0)
