@@ -7,8 +7,8 @@ use sdl2::event::Event;
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::render::TextureAccess;
 
-const CAM_WIDTH: u32 = 640;
-const CAM_HEIGHT: u32 = 480;
+pub const CAM_WIDTH: u32 = 640;
+pub const CAM_HEIGHT: u32 = 480;
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 768;
