@@ -7,11 +7,8 @@ use sdl2::event::Event;
 use sdl2::pixels::PixelFormatEnum;
 use sdl2::render::TextureAccess;
 
-pub const CAM_WIDTH: u32 = 640;
-pub const CAM_HEIGHT: u32 = 480;
-
-const WIDTH: u32 = 1024;
-const HEIGHT: u32 = 768;
+const WIDTH: u32 = 512;
+const HEIGHT: u32 = 512;
 
 pub fn run() {
     let context = sdl2::init().unwrap();
@@ -31,20 +28,22 @@ pub fn run() {
         .accelerated()
         .build()
         .unwrap();
+
+    let lines = std::fs::read_to_string("src/scene.ron").expect("Can't read scene.ron");
+    let mut scene: Scene = ron::de::from_str(&lines).unwrap();
+
+    let pixel_count: usize = scene.cam.width as usize * scene.cam.height as usize * 3;
+    let mut pixels: Vec<u8> = vec![0; pixel_count];
+
     let tex_creator = canvas.texture_creator();
     let mut texture = tex_creator
         .create_texture(
             PixelFormatEnum::RGB24,
             TextureAccess::Streaming,
-            CAM_WIDTH,
-            CAM_HEIGHT,
+            scene.cam.width,
+            scene.cam.height,
         )
         .unwrap();
-    const PIX_SIZE: usize = CAM_WIDTH as usize * CAM_HEIGHT as usize * 3;
-    let mut pixels: Vec<u8> = vec![0; PIX_SIZE];
-
-    let lines = std::fs::read_to_string("src/scene.ron").expect("Can't read scene.ron");
-    let mut scene: Scene = ron::de::from_str(&lines).unwrap();
 
     canvas.clear();
     canvas.present();
@@ -70,7 +69,7 @@ pub fn run() {
         if first || input_handler.dirty || scene.any_animation_dirty() {
             let updated = march(&scene);
             pixels[..updated.len()].clone_from_slice(&updated[..]);
-            let _ = texture.update(None, &pixels, CAM_WIDTH as usize * 3);
+            let _ = texture.update(None, &pixels, scene.cam.width as usize * 3);
             first = false;
         }
         canvas.clear();

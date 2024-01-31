@@ -1,3 +1,11 @@
+extern crate sdl2;
+extern crate serde;
+extern crate nalgebra;
+extern crate ron;
+extern crate scoped_threadpool;
+extern crate num_traits;
+extern crate num_cpus;
+
 mod animation;
 mod app;
 mod camera;

@@ -2,8 +2,9 @@ use crate::raytracer::Ray;
 
 use crate::math::{Vec3f, Vec3, Mat4f, translation};
 
-use num::traits::Zero;
 use std::f32::INFINITY;
+
+use num_traits::identities::Zero;
 
 use serde::{Serialize, Deserialize};
 
@@ -38,7 +39,7 @@ pub enum Geometry {
 
 impl Shape for Geometry {
     fn get_normal(&self, transform: &Mat4f, ray: &Ray, tnear: f32) -> Vec3f {
-        use Geometry::*;
+        use self::Geometry::*;
         match *self {
             Triangle(tri) => tri.get_normal(transform, ray, tnear),
             Cuboid(cube) => cube.get_normal(transform, ray, tnear),
@@ -48,7 +49,7 @@ impl Shape for Geometry {
 
     fn intersect(&self, transform: &Mat4f, ray: &Ray) -> (f32, f32)
     {
-        use Geometry::*;
+        use self::Geometry::*;
         match *self {
             Triangle(tri) => tri.intersect(transform, ray),
             Cuboid(cube) => cube.intersect(transform, ray),

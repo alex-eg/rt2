@@ -42,7 +42,7 @@ pub fn march(scene: &Scene) -> Vec<u8> {
         right: cam.up.cross(&cam.dir).normalize(),
     };
     pool.scoped(|scope| {
-        for chunk in surf.divide(128, 128) {
+        for chunk in surf.divide(32, 32) {
             scope.execute(|| {
                 process_part(cam, objects, lights, chunk, &params);
             });

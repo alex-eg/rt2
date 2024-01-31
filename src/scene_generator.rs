@@ -1,5 +1,4 @@
 use crate::animation::Animation;
-use crate::app::{CAM_WIDTH, CAM_HEIGHT};
 use crate::camera::CamBuilder;
 use crate::light::Light;
 use crate::material::Material;
@@ -42,8 +41,8 @@ pub fn generate_scene() {
         .eye(Vec3f::new(0., 0., 60.))
         .center(Vec3f::new(0., 0., 59.))
         .fov(30.)
-        .width(CAM_WIDTH)
-        .height(CAM_HEIGHT)
+        .width(128)
+        .height(128)
         .up(Vec3f::new(0., -1., 0.))
         .build();
 

@@ -1,9 +1,9 @@
 use crate::na::{clamp, Rotation3 as Rot3, Unit};
 use crate::math::Vec3f;
 
-use num::traits::Zero;
-
 use serde::{Serialize, Deserialize};
+
+use num_traits::identities::Zero;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 struct Rotate {

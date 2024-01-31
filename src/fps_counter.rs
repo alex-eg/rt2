@@ -1,22 +1,22 @@
-use time::precise_time_ns;
+use std::time::Instant;
 
 use std::collections::VecDeque;
 
 pub struct FpsCounter {
-    previous: u64,
-    times: VecDeque<u32>,
+    previous: Instant,
+    times: VecDeque<u128>,
 }
 
 impl FpsCounter {
     pub fn new(span: usize) -> FpsCounter {
         FpsCounter {
-            previous: 100_000,
+            previous: Instant::now(),
             times: VecDeque::with_capacity(span),
         }
     }
 
     pub fn restart(&mut self) {
-        self.previous = precise_time_ns();
+        self.previous = Instant::now();
     }
 
     pub fn update(&mut self) {
@@ -24,17 +24,15 @@ impl FpsCounter {
             self.times.pop_front();
         }
 
-        let current = precise_time_ns();
-        self.times.push_back((current - self.previous) as u32);
-        self.previous = current;
+        self.times.push_back(self.previous.elapsed().as_millis());
+        self.previous = Instant::now();
     }
 
     pub fn fps(&self) -> f32 {
-        let mut acc: u64 = 0;
+        let mut acc: u128 = 0;
         for t in &self.times {
-            acc += u64::from(*t);
+            acc += *t;
         }
-
-        1. / (acc as f32 / self.times.len() as f32) * 1_000_000_000.
+        1000. / (acc as f32 / self.times.len() as f32)
     }
 }
